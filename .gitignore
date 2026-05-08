@@ -1,0 +1,30 @@
+.gitnexus
+
+# graphify outputs (per universal-claudemd v21 §44)
+graphify-out/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs
+*.log
+logs/
+
+# Agent-tool hidden dirs (per universal-claudemd project-hygiene §3)
+.serena/
+.gitnexusignore
+.cgcignore
+.claude/
+lychee.toml
