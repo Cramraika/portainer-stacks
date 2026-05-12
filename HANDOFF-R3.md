@@ -36,21 +36,25 @@ Repo state at close: 2 file changes committed, 1 new file (`HANDOFF-R3.md`) pend
 
 ---
 
-## §C — Carry-forward findings NOT closed in this session
+## §C — Carry-forward findings (4 closed at R3 follow-up; 1 still in-progress)
 
-1. **`stacks/` is empty (BUILD-NOT-DERIDE preserved)** — Phase 7 migration declares immich / cronicle / dns-proxy as pending operator-supervised export per README. This is in-progress core work. Next session opens up when operator runs `scripts/portainer-export.sh --list` against the live Portainer to surface real stack IDs. **Do not autonomously populate `stacks/` — it requires live Portainer credentials.**
+1. **`stacks/` is empty (BUILD-NOT-DERIDE preserved)** — Phase 7 migration declares immich / cronicle / dns-proxy as pending operator-supervised export per README. This is in-progress core work. Next session opens up when operator runs `scripts/portainer-export.sh --list` against the live Portainer to surface real stack IDs. **Do not autonomously populate `stacks/` — it requires live Portainer credentials. STATUS: still in-progress (the pinnacle work itself).**
 
-2. **master-pending P1-10 `/metrics` entry for portainer-stacks** — operator clarified the connection: each stack inside `stacks/` (immich/cronicle/dns-proxy) should expose `/metrics` for `vps-ansible/roles/observability` Prometheus scrape. **Reframed disposition (operator-blessed):** the requirement applies *per-stack*, not to the repo itself. When stacks/<name>/docker-compose.yml lands, ensure the service exposes /metrics + has the prometheus.io/scrape labels expected by vps-ansible's observability role. Master-pending P1-10 line for portainer-stacks can be re-labelled "per-stack /metrics labels + vps-ansible scrape coordination" rather than struck.
+2. ~~**master-pending P1-10 `/metrics` entry for portainer-stacks**~~ — **CLOSED at R3 follow-up.** Operator-blessed reframe applied to `~/.claude/specs/2026-05-07-master-pending.md` line 271: portainer-stacks struck from P1-10 header, disposition note appended pointing back to this HANDOFF §C.2. Per-stack /metrics + prometheus.io labels become per-stack PR work when stacks/<name>/ land. Per-stack lane is tracked implicitly in §35 "Future" of CLAUDE.md.
 
-3. **master-pending §1 graphify Pass-3 entry for portainer-stacks** — operator chose "Run Pass-3 for completeness." Empirical result this session:
+3. ~~**master-pending §1 graphify Pass-3 entry for portainer-stacks**~~ — **CLOSED at R3 follow-up.** Operator chose "mark RESOLVED-as-NA" after seeing empirical evidence:
    - Pass-1 (`graphify update .`, no LLM): `[graphify watch] No code files found - nothing to rebuild.`
    - Pass-3 (`graphify extract .`, semantic LLM): `error: no LLM API key found. Set MOONSHOT_API_KEY (kimi) or ANTHROPIC_API_KEY (claude)`.
    - graphify doesn't recognize bash/YAML as "code" for AST extraction; multimodal LLM pass would have nothing to chew on (no images / videos / PDFs / dense docs).
-   - **Carry-forward disposition for next session**: either (a) set `ANTHROPIC_API_KEY` and re-run `graphify extract .` to formally close the master-pending entry with a near-empty `graphify-out/`, OR (b) mark RESOLVED-as-NA in master-pending §1 with link to this HANDOFF §C.3 as evidence. Recommendation: (b) — the empirical evidence is conclusive.
+   - **Disposition**: master-pending P1-7 line 252 portainer-stacks struck; "the 3 of 26" → "the 2 of 26 still pending" with RESOLVED-as-NA note pointing back to this HANDOFF §C.3.
 
-4. **`lychee.toml` regex error** — `exclude_path = ["**/node_modules/**", ...]` is glob syntax but lychee parses these as regex. `lychee --config lychee.toml ...` exits with `regex parse error: repetition operator missing expression`. Per `feedback file_lychee.toml is gitignored in this repo` (project-hygiene §3 agent-tool-hidden), the file is local-only — fix doesn't propagate via commit. **Fleet sweep needed**: check if other repos' lychee.toml have the same broken pattern. Likely cause: lychee config schema changed between versions and the template wasn't updated.
+4. ~~**`lychee.toml` regex error**~~ — **CLOSED at R3 follow-up.** Operator chose "Fix locally + fleet-grep". Findings:
+   - lychee 0.23.0 `--exclude-path` takes **regex** (verified via `lychee --help`); pattern `"**/node_modules/**"` is a regex parse error
+   - This repo's `lychee.toml` fixed locally: glob patterns replaced with anchored regex equivalents (`"/dist/"`, `"/\\.next/"`, etc.). `lychee --config lychee.toml README.md CLAUDE.md` now exits cleanly.
+   - File is gitignored in this repo per project-hygiene §3 (agent-tool-hidden-dirs convention), so fix doesn't propagate via commit
+   - **Fleet sweep result**: 22 other repos have the identical broken pattern. New master-pending **P1-12** entry surfaced (`~/.claude/specs/2026-05-07-master-pending.md` after P1-11 closure) — fleet-wide `lychee.toml` `exclude_path` regex syntax error, all 22 repos listed with operator-decision deferred (sweep-now vs project-template re-bootstrap).
 
-5. **CLAUDE.md has no §35 "Future" section** — the repo's pinnacle (every Portainer-managed stack declared canonically + Infisical-rendered secrets + verify post-deploy) is documented across README + CLAUDE.md inline but not in a §35-shaped Past/Present/Future block. Master-pending §1 §F8 framed this repo as "no roadmap — confirmed empty, not missed" which contradicts the existence of a clear pinnacle. Decision deferred to operator — small addition or accept current shape.
+5. ~~**CLAUDE.md has no §35 "Future" section**~~ — **CLOSED at R3 follow-up.** Operator chose "Add full §35 block with cross-refs to platform-docs ADRs". Added to CLAUDE.md before `## Deviations from Universal Laws` — Past (3 commits + Phase 7 close + ADR-022/029 lineage), Present (3 scripts + empty stacks/ awaiting export + v45 preamble + 7 Serena memories + Tier C), Future (concrete sequence-anchored progress markers toward pinnacle, NOT date-anchored per `feedback_no_timeframes_or_etas.md`), Cross-references (ADR-022 + ADR-029 + portainer-git-sync runbook + discovery-D1 tracker + vps-ansible observability role).
 
 ---
 

@@ -169,5 +169,38 @@ scripts/portainer-verify.sh <stack-name>
 - **hostinger** MCP — VPS-level operations
 - **infisical** MCP — secrets injection at deploy time
 
+## Past / Present / Future (per universal §35)
+
+### Past
+- `4ab86fb feat: bootstrap portainer-stacks repo for #56 BoltDB → Git-sync migration` — initial scaffold, README + scripts skeletons
+- `abc5826 sync(pre-wave-2): bootstrap CLAUDE.md + .gitignore for VPS-infra cluster compliance` — first preamble + cluster-playbook inline
+- Phase 7 close declared 2026-04-26 per ADR-022 — the *reconciliation-boundary* boundary between Portainer's runtime state and this repo's declarative source-of-truth was named on that date; export+import migration of live stacks remains in-flight beyond Phase 7 close
+- ADR-029 (`ansible-scope-vs-coolify-boundary`) settled the *what-goes-where* between vps-ansible, Coolify, and Portainer — Portainer's lane is "pre-built images + infrastructure stacks the operator wants visible in a UI"
+
+### Present
+- 3 operator-helper scripts wired against Portainer API: `portainer-export.sh` (extract from BoltDB), `portainer-import.sh` (re-onboard via Git-sync), `portainer-verify.sh` (post-deploy health check)
+- `stacks/` directory exists but is **empty pending operator-supervised export** — expected stacks per Phase 3 D1 inventory: `immich`, `cronicle` (legacy; may retire), `dns-proxy`, plus discovery at export time
+- CLAUDE.md preamble at universal **v45** (in sync); both VPS-infra + brand-registry cluster playbooks inlined per v40 cluster-split
+- 7 Serena memories at `.serena/memories/*.md` from v31 bulk-onboarding (covers stack / cluster / license / external services / deviations / build-test-deploy / project facts)
+- Tier C — no UI, no app, no telemetry surface of its own; just declarative compose YAML targets
+
+### Future (pinnacle)
+
+Vision at pinnacle: **every Portainer-managed stack across both VPSes (vagary-core-1 + vagary-compute-1) is declared canonically here, secrets render via Infisical at deploy time, zero stacks remain in BoltDB, and `scripts/portainer-verify.sh` returns clean for the full set.**
+
+Concrete progress markers (sequence-anchored, not date-anchored per `feedback_no_timeframes_or_etas.md`):
+- First marker: `stacks/immich/{docker-compose.yml,README.md,.env.example}` lands + Portainer re-onboarded via `portainer-import.sh` + verify-clean
+- Per-stack labels: each compose carries `prometheus.io/scrape` + service-discovery labels for `vps-ansible/roles/observability` Prometheus scrape (closes the per-stack lane of master-pending P1-10's reframed shape)
+- Cron-able verify: `scripts/portainer-verify.sh --all` returns clean for every entry in `stacks/`
+- BoltDB-stack count reaches zero on both VPSes (the reconciliation-boundary lands as an audit invariant, not just a declared posture)
+- Auto-update cadence (Portainer `Interval: 5m`) validated by intentional repo-side compose-update propagating to the running container within the SLA
+
+### Cross-references (Past+Present+Future supporting docs)
+- `platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md` — the *why* of Git-sync as canonical
+- `platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md` — the *what-goes-where* between vps-ansible / Coolify / Portainer
+- `platform-docs/docs/runbooks/portainer-git-sync.md` — operator-supervised migration procedure (per-stack steps + rollback)
+- `platform-docs/09-trackers/discovery-D1-services-20260420.md` § Portainer — service inventory that names the expected stacks
+- `vps-ansible/roles/observability/` — the Prometheus scrape config that will consume per-stack `/metrics` endpoints once stacks ship
+
 ## Deviations from Universal Laws
 - None.
