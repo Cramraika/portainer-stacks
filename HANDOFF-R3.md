@@ -184,3 +184,21 @@ The 2 stale-for-this-repo entries (P1-10 /metrics + §1 graphify Pass-3) are dis
 ---
 
 **HANDOFF-R3 close.** Next opener: read §A.1-3 + this file's §B + §C; act.
+
+---
+
+## §K — Phase 9 doc-coherence audit pass (2026-05-15 by Subagent S5)
+
+Doc-coherence audit pass conducted under META-OVERWATCHER Phase 9 campaign (`platform-docs/02-governance/phase-9/PHASE-9.0-framework.md`). HANDOFF-R3 retained per §38.5 rule 4 — §C.1 (`stacks/` empty pending operator-supervised export) remains in-progress; §C.2-§C.5 stay closed.
+
+**Changes applied this audit:**
+
+1. `README.md` rewritten for public-OSS clarity — added status banner, scripts table, expanded migration procedure, secrets discipline section, forking guidance, and HTTPS cross-links to companion repos
+2. `CLAUDE.md` preamble synced from v45 → v46 (committed; was uncommitted carry-over from sync-preambles run); broken cross-link `platform-docs/09-trackers/discovery-D1-services-20260420.md` corrected to `.archived/` path
+3. `lychee.toml` unchanged — already fixed locally per §C.4; gitignored per project-hygiene §3
+4. `scripts/` unchanged — all 3 scripts re-validated (`bash -n`); no doc-vs-code drift
+5. Per-repo audit memo at `platform-docs/docs/audits/phase-9/2026-05-15-phase-9-portainer-stacks-doc-audit.md`
+
+**Cross-link integrity** (Phase 9 verification): all platform-docs paths resolve (ADR-022, ADR-029, portainer-git-sync.md runbook, discovery-D1 archive); all vps-ansible/observability paths resolve.
+
+**Stacks/ status unchanged:** still in-progress pending operator-supervised export. Vision-pinnacle markers in CLAUDE.md §35 Future remain accurate.
