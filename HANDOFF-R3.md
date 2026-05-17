@@ -32,7 +32,7 @@ Repo state at close: 2 file changes committed, 1 new file (`HANDOFF-R3.md`) pend
 
 1. **`uptime-kuma` MCP ✗ Failed to connect** — fleet-level; surfaced in `claude mcp list`. Not in any per-repo routing for this repo (CLAUDE.md External Services lists only coolify / hostinger / infisical). Defer to fleet master-pending.
 
-2. **Infisical MCP `! Needs authentication`** — fleet-level; `INFISICAL_UNIVERSAL_AUTH_CLIENT_ID/SECRET` revoke / re-auth pending per master-pending P0. Per CLAUDE.md routing, infisical IS in scope for this repo (secrets rendering at deploy time). When infisical comes back online, scripts/portainer-import.sh can be wrapped with `infisical run --` for the actual deploy.
+2. **Infisical MCP auth** — RESOLVED (OOB-22, 2026-05-08): the earlier `! Needs authentication` was a misconfigured `INFISICAL_API_URL`, not revoked creds — never a fleet P0. Per CLAUDE.md routing, infisical IS in scope for this repo (secrets rendering at deploy time): `scripts/portainer-import.sh` can be wrapped with `infisical run --` for the actual deploy.
 
 ---
 
@@ -87,7 +87,7 @@ No body changes to CLAUDE.md, README.md, or other scripts.
 
 | Tool | Observation |
 |---|---|
-| `claude mcp list` | 11 of 13 connected; 2 fleet issues (uptime-kuma fail, infisical needs auth). Per-repo routing healthy. |
+| `claude mcp list` | 11 of 13 connected; 1 fleet issue (uptime-kuma fail). Infisical auth resolved (OOB-22, 2026-05-08). Per-repo routing healthy. |
 | `~/.claude/scripts/hooks-sanity-check.sh` | Silent — clean. |
 | `~/.claude/scripts/audit-signal-check.sh` | Flagged 1 CLAUDE.md sync drift (this repo's uncommitted v45 bump). Cleared by Commit `02fea3e`. |
 | `~/.claude/scripts/sync-preambles.py --dry-run` | Returned no portainer hits (already in sync; prior session had run it). |
@@ -131,7 +131,7 @@ Applied directly this session (no re-litigation):
 
 4. **No Roadmap section in CLAUDE.md** — by design (project-template variant for Tier C infra) but creates a §35 Past/Present/Future coverage gap. If future fleet audits flag this, surface back to §C.5 disposition.
 
-5. **`scripts/portainer-import.sh` references env vars not yet rendered through Infisical** — the operator-CFR `PORTAINER_API_TOKEN` + optional `REPO_PAT` should be wired through `infisical run --env=prod --` when used in CI / automation. Until Infisical auth is back (fleet P0), the script runs interactively with operator-pasted token (acceptable for one-off Phase 7 migration; not for automation).
+5. **`scripts/portainer-import.sh` references env vars not yet rendered through Infisical** — the operator-CFR `PORTAINER_API_TOKEN` + optional `REPO_PAT` should be wired through `infisical run --env=prod --` when used in CI / automation. Infisical auth is healthy (OOB-22 resolved 2026-05-08) so this wiring can land now; until then the script runs interactively with operator-pasted token (acceptable for one-off Phase 7 migration; not for automation).
 
 6. **Post-commit hook runs cluster-wide graphify** — `[graphify hook] launching background rebuild` after each commit launches an AST scan over 3011 files (much wider than this repo). This is the cluster-merge behavior — useful but slow. If commit-cadence picks up, consider scoping the hook to per-repo.
 
