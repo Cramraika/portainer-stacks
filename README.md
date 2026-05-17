@@ -8,7 +8,7 @@ Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compo
 
 ## Status
 
-**Phase 7 migration in-flight.** The `stacks/` directory is intentionally empty pending operator-supervised export from live Portainer BoltDB. Expected first migrations: `immich`, `dns-proxy`, and (legacy) `cronicle`. See [Migration procedure](#migration-procedure-operator-supervised) below.
+**Phase 7 migration in-flight.** First stack captured: `immich` (`stacks/immich/`, captured 2026-05-16). Remaining expected migrations: `dns-proxy` and (legacy) `cronicle` — still pending operator-supervised export from live Portainer BoltDB. See [Migration procedure](#migration-procedure-operator-supervised) below.
 
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
@@ -81,7 +81,7 @@ Populated per-migration. Expected stacks (per the discovery inventory archived a
 
 | Stack | Host | Status |
 |---|---|---|
-| immich | `vagary-core-1` | pending export |
+| immich | `vagary-core-1` | captured 2026-05-16 (`stacks/immich/`) |
 | cronicle | `vagary-core-1` | pending export (legacy; may retire) |
 | dns-proxy | `vagary-core-1` | pending export |
 | (others discovered at export time) | — | — |
@@ -101,6 +101,8 @@ This repo is public to make the operator-helper scripts reusable. To fork:
 - [`platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md`](https://github.com/Cramraika/platform-docs/blob/main/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md) — *what goes where* between vps-ansible / Coolify / Portainer
 - [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/blob/main/docs/runbooks/portainer-git-sync.md) — operator-supervised migration runbook
 - [`vps-ansible/roles/observability/`](https://github.com/Cramraika/vps-ansible/tree/main/roles/observability) — Prometheus scrape config that will consume per-stack `/metrics` endpoints once stacks ship
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — stack-authoring and migration rules
+- [`SECURITY.md`](SECURITY.md) — secret-handling and reporting posture
 
 ## License
 

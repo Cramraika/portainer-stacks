@@ -6,7 +6,6 @@
 # Non-secret ${VAR} placeholders only; secrets render via Infisical (immich.env)
 # at deploy time. See .env.example for the variable list.
 #
-version: '3.8'
 
 name: immich
 
@@ -29,14 +28,22 @@ services:
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - stack.env
+    environment:
+      - TZ=Asia/Kolkata
+      - IMMICH_LOG_FORMAT=json
+      - IMMICH_TELEMETRY_INCLUDE=all
     ports:
       - '2283:2283'
     depends_on:
       - redis
       - database
+    mem_limit: 2g
     restart: always
     healthcheck:
       disable: false
+    networks:
+      - default
+      - monitoring
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -50,6 +57,10 @@ services:
       - model-cache:/cache
     env_file:
       - stack.env
+    environment:
+      - TZ=Asia/Kolkata
+      - IMMICH_LOG_FORMAT=json
+    mem_limit: 2560m
     restart: always
     healthcheck:
       disable: false
@@ -57,6 +68,9 @@ services:
   redis:
     container_name: immich_redis
     image: docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177
+    environment:
+      - TZ=Asia/Kolkata
+    mem_limit: 256m
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
@@ -69,9 +83,16 @@ services:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_DB=${DB_DATABASE_NAME}
       - POSTGRES_INITDB_ARGS='--data-checksums'
+      - TZ=Asia/Kolkata
     volumes:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql
+    mem_limit: 1g
     restart: always
 
 volumes:
   model-cache:
+
+networks:
+  default:
+  monitoring:
+    external: true

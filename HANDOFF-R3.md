@@ -38,7 +38,7 @@ Repo state at close: 2 file changes committed, 1 new file (`HANDOFF-R3.md`) pend
 
 ## §C — Carry-forward findings (4 closed at R3 follow-up; 1 still in-progress)
 
-1. **`stacks/` is empty (BUILD-NOT-DERIDE preserved)** — Phase 7 migration declares immich / cronicle / dns-proxy as pending operator-supervised export per README. This is in-progress core work. Next session opens up when operator runs `scripts/portainer-export.sh --list` against the live Portainer to surface real stack IDs. **Do not autonomously populate `stacks/` — it requires live Portainer credentials. STATUS: still in-progress (the pinnacle work itself).**
+1. **`stacks/` partially populated** — `stacks/immich/` captured 2026-05-16 (OW-17): compose + README + .env.example, captured directly from the live Portainer BoltDB compose dir. `cronicle` / `dns-proxy` still pending operator-supervised export per README. This remains in-progress core work. **STATUS: in-progress — immich done, cronicle + dns-proxy outstanding (the pinnacle work itself).**
 
 2. ~~**master-pending P1-10 `/metrics` entry for portainer-stacks**~~ — **CLOSED at R3 follow-up.** Operator-blessed reframe applied to `~/.claude/specs/2026-05-07-master-pending.md` line 271: portainer-stacks struck from P1-10 header, disposition note appended pointing back to this HANDOFF §C.2. Per-stack /metrics + prometheus.io labels become per-stack PR work when stacks/<name>/ land. Per-stack lane is tracked implicitly in §35 "Future" of CLAUDE.md.
 
