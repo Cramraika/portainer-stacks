@@ -203,5 +203,16 @@ Concrete progress markers (sequence-anchored, not date-anchored per `feedback_no
 - `platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md` § Portainer — service inventory that names the expected stacks (archived; methodology preserved as historical reference)
 - `vps-ansible/roles/observability/` — the Prometheus scrape config that will consume per-stack `/metrics` endpoints once stacks ship
 
+## VPS Service Navigation
+
+`portainer-stacks` holds Git-backed Docker Compose stacks that Portainer pulls. This index points CC at the canonical service playbooks for headless operation (operator does no UI work — CC handles 99% via API / CLI / MCP). Full playbook set: `platform-docs/02-governance/service-playbooks/`.
+
+| Service | This repo's resource | How CC leverages it | Canonical playbook |
+|---|---|---|---|
+| **Portainer** (stack host) | `stacks/immich/` is a Git-backed Portainer stack (id 8 on **vagary-core-1**), hourly auto-update poll | Stack ops via Portainer API at `portainer.chinmayramraika.in`; never paste secrets into the Portainer UI env panel | `service-playbooks/substrate/portainer.md` |
+| **Infisical** (secrets) | Stack `env_file` points at the Infisical-rendered absolute path `/root/.infisical-rendered/immich.env` on core-1 | Secrets render at deploy time via the on-VM `infisical-agent`; never inline secret values in compose | `service-playbooks/substrate/infisical.md` §9.5 |
+| **Reverse proxy** | Caddy on core-1 — `gallery` vhost fronts Immich | Vhost via `vps-ansible` Caddyfile.j2 | `service-playbooks/substrate/caddy.md` §5.2 |
+| **Observability** | Per-stack `/metrics` endpoints scraped by Prometheus (once stacks expose them) | `vps-ansible/roles/observability/` scrape config | `service-playbooks/observability/prometheus.md` |
+
 ## Deviations from Universal Laws
 - None.
