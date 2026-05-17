@@ -1,6 +1,6 @@
 # portainer-stacks
 
-> **Private** | Tier C infra-config | Vagary Labs / VPS-infra cluster
+> **Public OSS** | Tier C infra-config | Vagary Labs / VPS-infra cluster
 
 Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compose stacks. Per ADR-022 reconciliation-boundary, Portainer's BoltDB historically held compose definitions in-band; this repo is the canonical out-of-band declarative source from which Portainer pulls.
 
@@ -99,14 +99,15 @@ not pending exports; the inventory item is closed.
 
 ## Forking / reuse
 
-This is a **private** repo — the compose definitions carry VPS-internal config.
-The operator-helper scripts under `scripts/` are nonetheless generic; to reuse
-them in your own setup:
+This is a **public** repo — the compose definitions carry only non-secret VPS
+config (host paths, image tags/digests, network names). All secrets render at
+deploy time via Infisical and never live here. The operator-helper scripts
+under `scripts/` are generic; to reuse them in your own setup:
 
 1. Replace this README's references with your own org / Portainer URL
 2. Replace `REPO_URL` defaults in scripts with your own repo
-3. Keep the repo private if any compose carries product-internal config
-4. Provision an Infisical (or comparable secrets manager) instance to render `.env` at deploy time — never inline secrets in compose
+3. Provision an Infisical (or comparable secrets manager) instance to render `.env` at deploy time — never inline secrets in compose
+4. Keep any compose that genuinely must carry product-internal config in a separate private repo
 
 ## Cross-references
 
