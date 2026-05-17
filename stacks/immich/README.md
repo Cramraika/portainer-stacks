@@ -6,7 +6,8 @@ Self-hosted photo and video management — [immich.app](https://immich.app/).
 |---|---|
 | **Host** | vagary-core-1 |
 | **Portainer stack ID** | 8 |
-| **Captured** | 2026-05-16 (OW-17 — first portainer-stacks migration); refreshed 2026-05-17 via Portainer API |
+| **Stack mode** | **Git-backed** — Portainer pulls this `docker-compose.yml` from this repo (hourly auto-update poll). This repo IS the live source of truth, not a mirror/export. |
+| **History** | Captured 2026-05-16 (OW-17 — first portainer-stacks migration); migrated to Portainer Git-sync 2026-05-17 (W8) |
 | **Web port** | `2283` (immich-server) |
 
 ## Services
@@ -20,8 +21,10 @@ Self-hosted photo and video management — [immich.app](https://immich.app/).
 
 ## Environment variables
 
-See [`.env.example`](./.env.example). At deploy time, secrets render via Infisical
-into `immich.env` (symlinked as `.env` / `stack.env` in the Portainer compose dir).
+See [`.env.example`](./.env.example). The compose `env_file` points at the
+**absolute Infisical-rendered path** `/root/.infisical-rendered/immich.env` —
+this survives Portainer's git-redeploy (which rewrites `stack.env`) and keeps
+`DB_PASSWORD` out of the Portainer BoltDB (ADR-012 Mechanism-A preserved).
 
 - **Storage paths** — `UPLOAD_LOCATION` (rclone union mount, external storage),
   `LOCAL_STORAGE` (fast local storage for thumbs/encoded-video/cache/backups),
@@ -34,22 +37,15 @@ into `immich.env` (symlinked as `.env` / `stack.env` in the Portainer compose di
 served from an rclone union mount; all transient/derived data lives on fast
 local storage to avoid rclone overhead.
 
-## Re-capture
+## Changing the deployed config
 
-The compose file is exported from the live Portainer stack via the API.
-Portainer's public hostname sits behind a Cloudflare Access gate, so the
-export runs against the container directly on the host:
+This stack is **Git-backed** — Portainer auto-polls this repo and redeploys on
+change. To change the running immich deployment:
 
-```sh
-ssh vagary-core-1
-BASE=https://127.0.0.1:9443
-TOK=$(curl -sk -X POST $BASE/api/auth \
-  -H 'Content-Type: application/json' \
-  -d "{\"username\":\"cadmin\",\"password\":\"<PORTAINER_PASSWORD from vps_host/.env>\"}" \
-  | python3 -c 'import sys,json;print(json.load(sys.stdin)["jwt"])')
-curl -sk $BASE/api/stacks/8/file -H "Authorization: Bearer $TOK" \
-  | python3 -c 'import sys,json;print(json.load(sys.stdin)["StackFileContent"],end="")'
-```
+1. Edit `docker-compose.yml` in this directory
+2. Commit + push to `main`
+3. Portainer picks up the change on its next poll (or trigger a manual redeploy
+   in the Portainer UI: stack → "Pull and redeploy")
 
-`docker-compose.yml` here was refreshed 2026-05-17 from the live stack
-(immich `v2.7.4` → `v2.7.5` drift corrected).
+Do **not** edit the stack in the Portainer web editor — Git-sync mode would
+overwrite editor changes on the next poll. The repo is the source of truth.

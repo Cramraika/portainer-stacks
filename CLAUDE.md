@@ -179,8 +179,9 @@ scripts/portainer-verify.sh <stack-name>
 
 ### Present
 - 3 operator-helper scripts wired against Portainer API: `portainer-export.sh` (extract from BoltDB), `portainer-import.sh` (re-onboard via Git-sync), `portainer-verify.sh` (post-deploy health check)
-- `stacks/immich/` is **captured** (2026-05-16, OW-17 — `docker-compose.yml` + `README.md` + `.env.example`); remaining expected stacks per Phase 3 D1 inventory still pending operator-supervised export: `cronicle` (legacy; may retire), `dns-proxy`, plus discovery at export time
-- CLAUDE.md preamble at universal **v45** (in sync); both VPS-infra + brand-registry cluster playbooks inlined per v40 cluster-split
+- `stacks/immich/` is **Git-backed** (W8 2026-05-17 — `docker-compose.yml` + `README.md` + `.env.example`): Portainer stack ID 8 pulls the compose from this repo on an hourly auto-update poll; this repo is the live source of truth. `env_file` is the absolute Infisical-rendered path `/root/.infisical-rendered/immich.env`.
+- Live Portainer (`vagary-core-1`) was API-enumerated 2026-05-17 — exactly **two** stacks: `immich-app` (Git-backed, above) + `anjaan_online` (git-deployed from the `anjaan-app` repo; documented at `stacks/anjaan_online/`). `cronicle` / `dns-proxy` from the early discovery inventory were **never created as Portainer stacks** — not pending exports.
+- CLAUDE.md preamble at universal **v46** (in sync); both VPS-infra + brand-registry cluster playbooks inlined per v40 cluster-split
 - 7 Serena memories at `.serena/memories/*.md` from v31 bulk-onboarding (covers stack / cluster / license / external services / deviations / build-test-deploy / project facts)
 - Tier C — no UI, no app, no telemetry surface of its own; just declarative compose YAML targets
 
@@ -189,11 +190,11 @@ scripts/portainer-verify.sh <stack-name>
 Vision at pinnacle: **every Portainer-managed stack across both VPSes (vagary-core-1 + vagary-compute-1) is declared canonically here, secrets render via Infisical at deploy time, zero stacks remain in BoltDB, and `scripts/portainer-verify.sh` returns clean for the full set.**
 
 Concrete progress markers (sequence-anchored, not date-anchored per `feedback_no_timeframes_or_etas.md`):
-- First marker: ✓ `stacks/immich/{docker-compose.yml,README.md,.env.example}` captured 2026-05-16 (OW-17) — `immich_server` joined the external `monitoring` docker network for Prometheus scrape. Still pending: Portainer re-onboarded via `portainer-import.sh` + verify-clean
+- First marker: ✓ `stacks/immich/{docker-compose.yml,README.md,.env.example}` Git-backed (W8 2026-05-17) — Portainer stack ID 8 migrated to Git-sync mode (hourly auto-update poll); `immich_server` is on the external `monitoring` docker network for Prometheus scrape.
 - Per-stack labels: each compose carries `prometheus.io/scrape` + service-discovery labels for `vps-ansible/roles/observability` Prometheus scrape (closes the per-stack lane of master-pending P1-10's reframed shape)
 - Cron-able verify: `scripts/portainer-verify.sh --all` returns clean for every entry in `stacks/`
 - BoltDB-stack count reaches zero on both VPSes (the reconciliation-boundary lands as an audit invariant, not just a declared posture)
-- Auto-update cadence (Portainer `Interval: 5m`) validated by intentional repo-side compose-update propagating to the running container within the SLA
+- Auto-update cadence validated by an intentional repo-side compose-update propagating to the running container within the poll SLA
 
 ### Cross-references (Past+Present+Future supporting docs)
 - `platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md` — the *why* of Git-sync as canonical

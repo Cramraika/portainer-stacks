@@ -1,6 +1,6 @@
 # portainer-stacks
 
-> **Public OSS** | Tier C infra-config | Vagary Labs / VPS-infra cluster
+> **Private** | Tier C infra-config | Vagary Labs / VPS-infra cluster
 
 Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compose stacks. Per ADR-022 reconciliation-boundary, Portainer's BoltDB historically held compose definitions in-band; this repo is the canonical out-of-band declarative source from which Portainer pulls.
 
@@ -10,10 +10,12 @@ Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compo
 
 **All live Portainer stacks captured (2026-05-17).** The live Portainer host
 (`vagary-core-1`) was enumerated via the API: it has exactly two stacks —
-`immich-app` (editor-managed, exported to `stacks/immich/`) and `anjaan_online`
-(git-deployed; compose lives in the `anjaan-app` repo, documented at
-`stacks/anjaan_online/`). The previously-expected `cronicle` and `dns-proxy`
-do not exist as Portainer stacks. See [Stack inventory](#stack-inventory).
+`immich-app` (**Git-backed from this repo** — Portainer auto-polls
+`stacks/immich/docker-compose.yml` hourly) and `anjaan_online` (git-deployed;
+compose lives in the `anjaan-app` repo, documented at `stacks/anjaan_online/`).
+`cronicle` and `dns-proxy` — named in an early discovery inventory — were never
+created as Portainer stacks; they are not pending exports. See
+[Stack inventory](#stack-inventory).
 
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
@@ -87,21 +89,23 @@ API on 2026-05-17 — it currently has exactly **two** stacks:
 
 | Stack | Portainer ID | Host | Status |
 |---|---|---|---|
-| immich-app | 8 | `vagary-core-1` | captured (`stacks/immich/`); refreshed 2026-05-17 from live stack |
+| immich-app | 8 | `vagary-core-1` | **Git-backed** — `stacks/immich/docker-compose.yml` is the live source; Portainer auto-polls this repo hourly (migrated to Git-sync 2026-05-17, W8) |
 | anjaan_online | 14 | `vagary-core-1` | git-deployed — compose lives in the `anjaan-app` repo, not exportable; documented at `stacks/anjaan_online/` |
 
 The earlier discovery inventory (`platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md`)
-expected `cronicle` and `dns-proxy` — **neither exists as a Portainer stack** on
-the live host as of 2026-05-17. They are either run outside Portainer, already
-retired, or never created. No pending Portainer-stack exports remain.
+named `cronicle` and `dns-proxy` — **neither was ever created as a Portainer
+stack** on the live host (confirmed by API enumeration 2026-05-17). They are
+not pending exports; the inventory item is closed.
 
 ## Forking / reuse
 
-This repo is public to make the operator-helper scripts reusable. To fork:
+This is a **private** repo — the compose definitions carry VPS-internal config.
+The operator-helper scripts under `scripts/` are nonetheless generic; to reuse
+them in your own setup:
 
 1. Replace this README's references with your own org / Portainer URL
-2. Replace `REPO_URL` defaults in scripts with your fork
-3. Decide whether your stacks are public — if any compose carries product-internal config, keep the fork private
+2. Replace `REPO_URL` defaults in scripts with your own repo
+3. Keep the repo private if any compose carries product-internal config
 4. Provision an Infisical (or comparable secrets manager) instance to render `.env` at deploy time — never inline secrets in compose
 
 ## Cross-references
