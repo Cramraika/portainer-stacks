@@ -6,15 +6,15 @@ Self-hosted photo and video management — [immich.app](https://immich.app/).
 |---|---|
 | **Host** | vagary-core-1 |
 | **Portainer stack ID** | 8 |
-| **Captured** | 2026-05-16 (OW-17 — first portainer-stacks migration) |
+| **Captured** | 2026-05-16 (OW-17 — first portainer-stacks migration); refreshed 2026-05-17 via Portainer API |
 | **Web port** | `2283` (immich-server) |
 
 ## Services
 
 | Service | Container | Image |
 |---|---|---|
-| immich-server | `immich_server` | `ghcr.io/immich-app/immich-server:v2.7.4` |
-| immich-machine-learning | `immich_machine_learning` | `ghcr.io/immich-app/immich-machine-learning:v2.7.4` |
+| immich-server | `immich_server` | `ghcr.io/immich-app/immich-server:v2.7.5` |
+| immich-machine-learning | `immich_machine_learning` | `ghcr.io/immich-app/immich-machine-learning:v2.7.5` |
 | redis | `immich_redis` | `docker.io/valkey/valkey:8-bookworm` (sha-pinned) |
 | database | `immich_postgres` | `ghcr.io/immich-app/postgres:18-vectorchord0.5.3-pgvector0.8.1` |
 
@@ -36,12 +36,20 @@ local storage to avoid rclone overhead.
 
 ## Re-capture
 
+The compose file is exported from the live Portainer stack via the API.
+Portainer's public hostname sits behind a Cloudflare Access gate, so the
+export runs against the container directly on the host:
+
 ```sh
-PORTAINER_URL=https://portainer.chinmayramraika.in \
-PORTAINER_API_TOKEN=<from-Infisical> \
-../../scripts/portainer-export.sh 8
+ssh vagary-core-1
+BASE=https://127.0.0.1:9443
+TOK=$(curl -sk -X POST $BASE/api/auth \
+  -H 'Content-Type: application/json' \
+  -d "{\"username\":\"cadmin\",\"password\":\"<PORTAINER_PASSWORD from vps_host/.env>\"}" \
+  | python3 -c 'import sys,json;print(json.load(sys.stdin)["jwt"])')
+curl -sk $BASE/api/stacks/8/file -H "Authorization: Bearer $TOK" \
+  | python3 -c 'import sys,json;print(json.load(sys.stdin)["StackFileContent"],end="")'
 ```
 
-This README was captured directly from the live Portainer BoltDB compose on
-vagary-core-1 (`/var/lib/docker/volumes/portainer_data/_data/compose/8/`) because
-a Portainer API token was not available to the capturing session.
+`docker-compose.yml` here was refreshed 2026-05-17 from the live stack
+(immich `v2.7.4` → `v2.7.5` drift corrected).

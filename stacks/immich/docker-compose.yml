@@ -1,25 +1,19 @@
 #
-# Immich Stack for Portainer
-# Make sure to configure environment variables in Portainer's stack environment section
+# Immich Stack for Portainer  (stack #8)
+# Managed env: stack.env -> /root/.infisical-rendered/immich.env (Mechanism A, Infisical-rendered)
+# Operational env (TZ / log-format / telemetry) + resource caps + monitoring net live in this compose
+# (non-secret config; secrets stay in the Infisical-rendered env_file).
+# IaC mirror: portainer-stacks/stacks/immich/docker-compose.yml
+# immich-server joins the shared `monitoring` network so Prometheus scrapes :8081/:8082 metrics.
 #
-# Captured from live Portainer stack ID=8 on vagary-core-1, 2026-05-16 (OW-17).
-# Non-secret ${VAR} placeholders only; secrets render via Infisical (immich.env)
-# at deploy time. See .env.example for the variable list.
-#
-
 name: immich
 
 services:
   immich-server:
     container_name: immich_server
-    image: ghcr.io/immich-app/immich-server:v2.7.4
-    # extends:
-    #   file: hwaccel.transcoding.yml
-    #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    image: ghcr.io/immich-app/immich-server:v2.7.5
     volumes:
-      # Original photos/videos on rclone union mount (external storage)
       - ${UPLOAD_LOCATION}/library:/usr/src/app/upload/library
-      # Everything else on local fast storage to avoid rclone overhead
       - ${LOCAL_STORAGE}/upload:/usr/src/app/upload/upload
       - ${LOCAL_STORAGE}/thumbs:/usr/src/app/upload/thumbs
       - ${LOCAL_STORAGE}/encoded-video:/usr/src/app/upload/encoded-video
@@ -34,25 +28,20 @@ services:
       - IMMICH_TELEMETRY_INCLUDE=all
     ports:
       - '2283:2283'
-    depends_on:
-      - redis
-      - database
-    mem_limit: 2g
-    restart: always
-    healthcheck:
-      disable: false
     networks:
       - default
       - monitoring
+    depends_on:
+      - redis
+      - database
+    restart: always
+    mem_limit: 2g
+    healthcheck:
+      disable: false
 
   immich-machine-learning:
     container_name: immich_machine_learning
-    # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
-    # Example tag: ${IMMICH_VERSION:-release}-cuda
-    image: ghcr.io/immich-app/immich-machine-learning:v2.7.4
-    # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
-    #   file: hwaccel.ml.yml
-    #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
+    image: ghcr.io/immich-app/immich-machine-learning:v2.7.5
     volumes:
       - model-cache:/cache
     env_file:
@@ -60,8 +49,8 @@ services:
     environment:
       - TZ=Asia/Kolkata
       - IMMICH_LOG_FORMAT=json
-    mem_limit: 2560m
     restart: always
+    mem_limit: 2560m
     healthcheck:
       disable: false
 
@@ -70,10 +59,10 @@ services:
     image: docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177
     environment:
       - TZ=Asia/Kolkata
-    mem_limit: 256m
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+    mem_limit: 256m
 
   database:
     container_name: immich_postgres
@@ -86,8 +75,8 @@ services:
       - TZ=Asia/Kolkata
     volumes:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql
-    mem_limit: 1g
     restart: always
+    mem_limit: 1g
 
 volumes:
   model-cache:

@@ -8,7 +8,12 @@ Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compo
 
 ## Status
 
-**Phase 7 migration in-flight.** First stack captured: `immich` (`stacks/immich/`, captured 2026-05-16). Remaining expected migrations: `dns-proxy` and (legacy) `cronicle` — still pending operator-supervised export from live Portainer BoltDB. See [Migration procedure](#migration-procedure-operator-supervised) below.
+**All live Portainer stacks captured (2026-05-17).** The live Portainer host
+(`vagary-core-1`) was enumerated via the API: it has exactly two stacks —
+`immich-app` (editor-managed, exported to `stacks/immich/`) and `anjaan_online`
+(git-deployed; compose lives in the `anjaan-app` repo, documented at
+`stacks/anjaan_online/`). The previously-expected `cronicle` and `dns-proxy`
+do not exist as Portainer stacks. See [Stack inventory](#stack-inventory).
 
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
@@ -77,14 +82,18 @@ Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](htt
 
 ## Stack inventory
 
-Populated per-migration. Expected stacks (per the discovery inventory archived at `platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md`):
+Populated per-migration. Live Portainer (`vagary-core-1`) was enumerated via the
+API on 2026-05-17 — it currently has exactly **two** stacks:
 
-| Stack | Host | Status |
-|---|---|---|
-| immich | `vagary-core-1` | captured 2026-05-16 (`stacks/immich/`) |
-| cronicle | `vagary-core-1` | pending export (legacy; may retire) |
-| dns-proxy | `vagary-core-1` | pending export |
-| (others discovered at export time) | — | — |
+| Stack | Portainer ID | Host | Status |
+|---|---|---|---|
+| immich-app | 8 | `vagary-core-1` | captured (`stacks/immich/`); refreshed 2026-05-17 from live stack |
+| anjaan_online | 14 | `vagary-core-1` | git-deployed — compose lives in the `anjaan-app` repo, not exportable; documented at `stacks/anjaan_online/` |
+
+The earlier discovery inventory (`platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md`)
+expected `cronicle` and `dns-proxy` — **neither exists as a Portainer stack** on
+the live host as of 2026-05-17. They are either run outside Portainer, already
+retired, or never created. No pending Portainer-stack exports remain.
 
 ## Forking / reuse
 
