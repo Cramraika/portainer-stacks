@@ -17,7 +17,7 @@
 #   REPO_PAT=<github-pat-if-private> \
 #   ./portainer-import.sh <stack-name>
 #
-# stack-name MUST match the directory under stacks/ (e.g. immich, cronicle).
+# stack-name MUST match the directory under stacks/ (e.g. immich, anjaan_online).
 # Compose path is derived as stacks/<stack-name>/docker-compose.yml.
 #
 # Per universal-claudemd §50.3: secrets stay in Infisical. NEVER paste
