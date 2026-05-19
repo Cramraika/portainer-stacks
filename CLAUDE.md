@@ -5,10 +5,10 @@ Git-sync source-of-truth for Portainer stacks (per ADR-022 reconciliation-bounda
 ---
 
 ## Claude Preamble
-<!-- VERSION: 2026-05-19-v47.3 -->
+<!-- VERSION: 2026-05-19-v48 -->
 <!-- SYNC-SOURCE: ~/.claude/conventions/universal-claudemd.md -->
 
-**Universal laws** (§4), **MCP routing** (§6), **Drift protocol** (§11), **Dynamic maintenance** (§14), **Capability resolution** (§15), **Subagent SKILL POLICY** (§16), **Session continuity** (§17), **Decision queue** (§17.a), **Attestation** (§18), **Cite format** (§19), **Three-way disagreement** (§20), **Pre-conditions** (§21), **Provenance markers** (§22), **Redaction rules** (§23), **Token budget** (§24), **Tool-failure fallback** (§25), **Prompt-injection rule** (§26), **Append-only discipline** (§27), **Closure-claim live-probe** (§27.5 — new in v47), **Design-doc self-consistency closing-pass** (§27.6 — new in v47), **Post-closure substrate-shift re-probe** (§27.7 — new in v47.3), **BLOCKED_BY markers** (§28), **Stop-loss ladder** (§29), **Business-invariant checks** (§30), **Plugin rent rubric** (§31), **Context ceilings** (§32), **Doc reference graph** (§33), **Anti-hallucination** (§34), **Past+Present+Future body** (§35), **Project trackers** (§36), **Doc ownership** (§37), **Archive-on-delete** (§38), **Sponsor + white-label** (§39 — moved to `playbooks/commercial-bound.md`), **Doc-vs-code drift** (§40), **Brand architecture** (§41), **Design system integration** (§42 — moved to `playbooks/tier-a-design.md`), **Session cognition** (§43), **Plugin dispatch** (§44), **Cross-repo clusters** (§45), **Tool-cascade workflow** (§46), **Multi-role agent matrix** (§47), **Parsimony / smallest-tool-first** (§48), **Audit triage discipline** (§49), **Source-of-truth matrix** (§50 — universal rows only; cluster-specific rows moved to playbooks), **Composite cascade catalog** (§51 — §51.2/51.4/51.6 moved to playbooks), **Session launch context + unattended-mode contract** (§52), **Recurrence detection + root-cause escalation** (§53). Sub-sections new in v44: **§4.5 cascade-commit exception**, **§17.b stale-P0 escalation**, **§32.5 canonical-doc size ceiling**, **§38.5 HANDOFF lifecycle enforcement**. Sub-sections new in v47: **§27.5 closure-claim live-probe discipline** (R8 root-cause fix; landed 2026-05-18) + **§27.6 design-doc self-consistency closing-pass discipline** (R3 root-cause fix; landed 2026-05-18 v47.1). Sub-section new in v47.2: **§53.5 count-instrument pre-population on recurrence detection** (lychee fleet-wide agent closure proposal; landed 2026-05-19). Sub-section new in v47.3: **§27.7 post-closure substrate-shift re-probe discipline** (R8 N=4 path-(b); landed 2026-05-19).
+**Universal laws** (§4), **MCP routing** (§6), **Drift protocol** (§11), **Dynamic maintenance** (§14), **Capability resolution** (§15), **Subagent SKILL POLICY** (§16), **Session continuity** (§17), **Decision queue** (§17.a), **Attestation** (§18), **Cite format** (§19), **Three-way disagreement** (§20), **Pre-conditions** (§21), **Provenance markers** (§22), **Redaction rules** (§23), **Token budget** (§24), **Tool-failure fallback** (§25), **Prompt-injection rule** (§26), **Append-only discipline** (§27), **Closure-claim live-probe** (§27.5 — new in v47), **Design-doc self-consistency closing-pass** (§27.6 — new in v47), **Post-closure substrate-shift re-probe** (§27.7 — new in v47.3), **Workspace-resource canonical-declaration** (§27.8 — new in v48), **BLOCKED_BY markers** (§28), **Stop-loss ladder** (§29), **Business-invariant checks** (§30), **Plugin rent rubric** (§31), **Context ceilings** (§32), **Doc reference graph** (§33), **Anti-hallucination** (§34), **Past+Present+Future body** (§35), **Project trackers** (§36), **Doc ownership** (§37), **Archive-on-delete** (§38), **Sponsor + white-label** (§39 — moved to `playbooks/commercial-bound.md`), **Doc-vs-code drift** (§40), **Brand architecture** (§41), **Design system integration** (§42 — moved to `playbooks/tier-a-design.md`), **Session cognition** (§43), **Plugin dispatch** (§44), **Cross-repo clusters** (§45), **Tool-cascade workflow** (§46), **Multi-role agent matrix** (§47), **Parsimony / smallest-tool-first** (§48), **Audit triage discipline** (§49), **Source-of-truth matrix** (§50 — universal rows only; cluster-specific rows moved to playbooks), **Composite cascade catalog** (§51 — §51.2/51.4/51.6 moved to playbooks), **Session launch context + unattended-mode contract** (§52), **Recurrence detection + root-cause escalation** (§53). Sub-sections new in v44: **§4.5 cascade-commit exception**, **§17.b stale-P0 escalation**, **§32.5 canonical-doc size ceiling**, **§38.5 HANDOFF lifecycle enforcement**. Sub-sections new in v47: **§27.5 closure-claim live-probe discipline** (R8 root-cause fix; landed 2026-05-18) + **§27.6 design-doc self-consistency closing-pass discipline** (R3 root-cause fix; landed 2026-05-18 v47.1). Sub-section new in v47.2: **§53.5 count-instrument pre-population on recurrence detection** (lychee fleet-wide agent closure proposal; landed 2026-05-19). Sub-section new in v47.3: **§27.7 post-closure substrate-shift re-probe discipline** (R8 N=4 path-(b); landed 2026-05-19). Sub-section new in v48: **§27.8 workspace-resource canonical-declaration discipline** (R-SCRD path-(a) procedural fix; broader scope per operator decision 2026-05-19; landed 2026-05-19T22:50Z).
 
 **Cluster playbooks** (per-repo `@-import` based on cluster membership): `~/.claude/conventions/playbooks/vps-infra.md` (DNS XOR for VPS-infra repos), `~/.claude/conventions/playbooks/deployed-service.md` (Sentry/Glitchtip XOR + production-incident triage + time-window correlation for repos with prod telemetry), `~/.claude/conventions/playbooks/tier-a-design.md` (Figma/Stitch + design system for Tier A/B), `~/.claude/conventions/playbooks/multi-lang.md` (cross-language refactor cascade for multi-language repos), `~/.claude/conventions/playbooks/commercial-bound.md` (sponsor-readiness + license-aware code-graph routing), `~/.claude/conventions/playbooks/brand-registry.md` (Vagary brand architecture for Vagary-family repos), `~/.claude/conventions/playbooks/bellring-cluster.md` (Bellring server↔extension; v1-stub), `~/.claude/conventions/playbooks/pulseboard-cluster.md` (Pulseboard Android↔Windows; v1-stub), `~/.claude/conventions/playbooks/vagary-cluster.md` (Vagary product cross-repo; v1-stub). **`tech-debt-audit.md`** is Read-on-demand (NOT @-imported) per ENTRY #169 §49 audit-triage discipline — invoked when user requests audit / tech-debt / dead-code work.
 
@@ -124,6 +124,63 @@ Additional divisions (media, ops, consulting, etc.) may be added later. Keep Vag
 
 - `vagarylabs.com` is **not yet purchased** (2026-04-19). Until acquired, Vagary Labs is an internal organizational concept; do not publish external references to `vagarylabs.com` until DNS is live.
 - Additional divisions (media, ops, consulting) may emerge. When they do, add a sibling subtree here + bump VERSION.
+
+---
+
+## Amendment 2 (2026-05-19, R10 deep-audit clarification)
+
+**Trigger**: fleet-benchmark-coc deep-audit surfaced the social-orchestrator registry harmonization (vps_host commit `0332566`) used `index-of-news` as a brand-tracking-unit in 9-row registries. Operator pushback: "vagary-platform will have 20+ verticles each with set of domains... bellring is on back burner... aakhara/anjaan have been merged into vagary platform... attorneyatlas + others are platform verticals not separate brands. based on all the governance and structure whats best recommendation? ensuring dynamics and future."
+
+**Clarification of brand-canon granularity** (corrects the implicit assumption in 9-row registry interpretation):
+
+### Brand-tracking-units (repo/legal-entity level)
+
+The canon below is what gets a SEPARATE PER-PLATFORM SOCIAL-ORCHESTRATOR ENTRY. It is INTENTIONALLY coarse — sub-verticals (e.g. `index-of-news`, `attorneyatlas`, future verticals in vagary-platform) do NOT each get their own social-orchestrator row; they roll up to `vagary-platform`:
+
+| # | Brand-tracking-unit | Repo | Tier | Notes |
+|---|---|---|---|---|
+| 1 | `vagary-platform` | vagary-platform | Platform-tier | 20+ verticals: index-of-news (news), attorneyatlas (legal vertical), future verticals. Per-vertical brand-stories live inside the platform repo, not as separate brand-tracking-units |
+| 2 | `vagary-voice` | vagary-voice | Active commercial | Voice-AI SaaS; trajectory uncertain (operator-flagged) |
+| 3 | `anjaan` | anjaan-app | **Back-burner** (operator-flagged 2026-05-19; "merged into vagary platform i think") | Hinglish consumer chat |
+| 4 | `aakhara` | aakhara | **Back-burner** (operator-flagged 2026-05-19; "merged into vagary platform i think") | Voice sales-training |
+| 5 | `bellring` | bellring-server + bellring-extension | **Back-burner** (operator-flagged 2026-05-19; "not gonna be picked up at least not in a while") | Whitelabel SaaS |
+| 6 | `pulseboard` | pulseboard (Android) + pulseboard-desktop | OSS utility | Android OSS sponsor-ready |
+| 7 | `bulk` | bulk | OSS utility | API trigger CLI |
+| 8 | `tldv-downloader` | tldv_downloader | OSS utility | Public 13★ |
+| 9 | `portfolio` | portfolio | Founder hub | chinmayramraika.in |
+
+### Sub-vertical resolution (within vagary-platform)
+
+vagary-platform IS a 20-vertical substrate. Each vertical (current + future) has its own domains, content surface, and brand-story. They are NOT separate brand-tracking-units for the purpose of social-orchestrator registries.
+
+Known/inferred verticals (non-exhaustive; per operator note "20+ verticles"):
+- `news` — flagship; Index of News brand; 6 news-domains
+- `legal` — attorneyatlas.com + attorneyatlas.us (has dedicated `_tag-manager/attorneyatlas-{com,us}/` workspaces; blackbox probes already in Prom scrape)
+- Future verticals: per operator roadmap (TBD)
+
+When a vertical needs its own social-orchestrator entry, it should be added to vagary-platform's INTERNAL vertical-roster, NOT promoted to top-level brand-tracking-unit.
+
+### Active-vs-back-burner dynamics
+
+The applicability matrix (vps_host `scripts/_applicability-matrix.md`) handles this dynamic via `applicable: true|false` per brand-platform cell. Back-burner brands typically have `applicable: false` on most social platforms today; flipping to `true` as they activate.
+
+When a brand-tracking-unit becomes substantively active (e.g., bellring resumes; aakhara independent again), update the `notes:` for that brand in the matrix; flip `applicable:` per platform as appropriate. The matrix is dynamic; brand-registry.md is canonical (this file).
+
+### Why this matters (closure-claim language)
+
+For audit/closure purposes, when referring to "the 9-brand canon" or similar:
+- This canon is `vagary-platform + vagary-voice + 4 commercial-products + 3 OSS + portfolio = 9 brand-tracking-units`
+- NOT `index-of-news` (that's a vagary-platform vertical, not the brand-tracking-unit)
+- NOT `attorneyatlas` (also a vagary-platform vertical)
+- The 9-row registry per social-platform corresponds to these 9 brand-tracking-units
+
+This amendment was authored to disambiguate after the fleet-benchmark-coc R10 deep-audit surfaced that earlier registry-harmonization used `index-of-news` as a brand-tracking-unit (wrong granularity). The harmonization-on-disk is being preserved (operator decision: not blow it up); a future cleanup PR will rewrite the 9 registry YAMLs to use `vagary-platform` instead of `index-of-news`. Tracker: master-pending OW-132 (filed post-amendment).
+
+### Operator-OOB residuals (per operator pushback 2026-05-19)
+
+- **Whether bellring/aakhara/anjaan/vagary-voice get reactivated**: future-state decision; current applicability matrix reflects today's back-burner state honestly
+- **Whether attorneyatlas (or other vagary-platform verticals) get promoted to top-level brand-tracking-unit**: future-state decision; today's brand-canon does NOT promote them
+- **Whether more verticals are added to vagary-platform**: operator-driven; brand-registry.md updates as needed
 
 <!-- END PLAYBOOKS BLOCK -->
 
