@@ -5,10 +5,10 @@ Git-sync source-of-truth for Portainer stacks (per ADR-022 reconciliation-bounda
 ---
 
 ## Claude Preamble
-<!-- VERSION: 2026-05-14-v46 -->
+<!-- VERSION: 2026-05-19-v47.3 -->
 <!-- SYNC-SOURCE: ~/.claude/conventions/universal-claudemd.md -->
 
-**Universal laws** (§4), **MCP routing** (§6), **Drift protocol** (§11), **Dynamic maintenance** (§14), **Capability resolution** (§15), **Subagent SKILL POLICY** (§16), **Session continuity** (§17), **Decision queue** (§17.a), **Attestation** (§18), **Cite format** (§19), **Three-way disagreement** (§20), **Pre-conditions** (§21), **Provenance markers** (§22), **Redaction rules** (§23), **Token budget** (§24), **Tool-failure fallback** (§25), **Prompt-injection rule** (§26), **Append-only discipline** (§27), **BLOCKED_BY markers** (§28), **Stop-loss ladder** (§29), **Business-invariant checks** (§30), **Plugin rent rubric** (§31), **Context ceilings** (§32), **Doc reference graph** (§33), **Anti-hallucination** (§34), **Past+Present+Future body** (§35), **Project trackers** (§36), **Doc ownership** (§37), **Archive-on-delete** (§38), **Sponsor + white-label** (§39 — moved to `playbooks/commercial-bound.md`), **Doc-vs-code drift** (§40), **Brand architecture** (§41), **Design system integration** (§42 — moved to `playbooks/tier-a-design.md`), **Session cognition** (§43), **Plugin dispatch** (§44), **Cross-repo clusters** (§45), **Tool-cascade workflow** (§46), **Multi-role agent matrix** (§47), **Parsimony / smallest-tool-first** (§48), **Audit triage discipline** (§49), **Source-of-truth matrix** (§50 — universal rows only; cluster-specific rows moved to playbooks), **Composite cascade catalog** (§51 — §51.2/51.4/51.6 moved to playbooks), **Session launch context + unattended-mode contract** (§52), **Recurrence detection + root-cause escalation** (§53). Sub-sections new in v44: **§4.5 cascade-commit exception**, **§17.b stale-P0 escalation**, **§32.5 canonical-doc size ceiling**, **§38.5 HANDOFF lifecycle enforcement**.
+**Universal laws** (§4), **MCP routing** (§6), **Drift protocol** (§11), **Dynamic maintenance** (§14), **Capability resolution** (§15), **Subagent SKILL POLICY** (§16), **Session continuity** (§17), **Decision queue** (§17.a), **Attestation** (§18), **Cite format** (§19), **Three-way disagreement** (§20), **Pre-conditions** (§21), **Provenance markers** (§22), **Redaction rules** (§23), **Token budget** (§24), **Tool-failure fallback** (§25), **Prompt-injection rule** (§26), **Append-only discipline** (§27), **Closure-claim live-probe** (§27.5 — new in v47), **Design-doc self-consistency closing-pass** (§27.6 — new in v47), **Post-closure substrate-shift re-probe** (§27.7 — new in v47.3), **BLOCKED_BY markers** (§28), **Stop-loss ladder** (§29), **Business-invariant checks** (§30), **Plugin rent rubric** (§31), **Context ceilings** (§32), **Doc reference graph** (§33), **Anti-hallucination** (§34), **Past+Present+Future body** (§35), **Project trackers** (§36), **Doc ownership** (§37), **Archive-on-delete** (§38), **Sponsor + white-label** (§39 — moved to `playbooks/commercial-bound.md`), **Doc-vs-code drift** (§40), **Brand architecture** (§41), **Design system integration** (§42 — moved to `playbooks/tier-a-design.md`), **Session cognition** (§43), **Plugin dispatch** (§44), **Cross-repo clusters** (§45), **Tool-cascade workflow** (§46), **Multi-role agent matrix** (§47), **Parsimony / smallest-tool-first** (§48), **Audit triage discipline** (§49), **Source-of-truth matrix** (§50 — universal rows only; cluster-specific rows moved to playbooks), **Composite cascade catalog** (§51 — §51.2/51.4/51.6 moved to playbooks), **Session launch context + unattended-mode contract** (§52), **Recurrence detection + root-cause escalation** (§53). Sub-sections new in v44: **§4.5 cascade-commit exception**, **§17.b stale-P0 escalation**, **§32.5 canonical-doc size ceiling**, **§38.5 HANDOFF lifecycle enforcement**. Sub-sections new in v47: **§27.5 closure-claim live-probe discipline** (R8 root-cause fix; landed 2026-05-18) + **§27.6 design-doc self-consistency closing-pass discipline** (R3 root-cause fix; landed 2026-05-18 v47.1). Sub-section new in v47.2: **§53.5 count-instrument pre-population on recurrence detection** (lychee fleet-wide agent closure proposal; landed 2026-05-19). Sub-section new in v47.3: **§27.7 post-closure substrate-shift re-probe discipline** (R8 N=4 path-(b); landed 2026-05-19).
 
 **Cluster playbooks** (per-repo `@-import` based on cluster membership): `~/.claude/conventions/playbooks/vps-infra.md` (DNS XOR for VPS-infra repos), `~/.claude/conventions/playbooks/deployed-service.md` (Sentry/Glitchtip XOR + production-incident triage + time-window correlation for repos with prod telemetry), `~/.claude/conventions/playbooks/tier-a-design.md` (Figma/Stitch + design system for Tier A/B), `~/.claude/conventions/playbooks/multi-lang.md` (cross-language refactor cascade for multi-language repos), `~/.claude/conventions/playbooks/commercial-bound.md` (sponsor-readiness + license-aware code-graph routing), `~/.claude/conventions/playbooks/brand-registry.md` (Vagary brand architecture for Vagary-family repos), `~/.claude/conventions/playbooks/bellring-cluster.md` (Bellring server↔extension; v1-stub), `~/.claude/conventions/playbooks/pulseboard-cluster.md` (Pulseboard Android↔Windows; v1-stub), `~/.claude/conventions/playbooks/vagary-cluster.md` (Vagary product cross-repo; v1-stub). **`tech-debt-audit.md`** is Read-on-demand (NOT @-imported) per ENTRY #169 §49 audit-triage discipline — invoked when user requests audit / tech-debt / dead-code work.
 
@@ -132,6 +132,32 @@ Additional divisions (media, ops, consulting, etc.) may be added later. Keep Vag
 ## Cluster: VPS-infra
 
 Part of the §45 VPS-infra cluster: vps_host, vps-ansible, platform-docs, portainer-stacks, host_page.
+
+## §2 Stack naming + compose env-var conventions
+
+Authored 2026-05-19 (W7 of platform-orchestration campaign). This repo flipped private → public 2026-05-18 (Portainer audit §14.5) so Portainer can clone the Git-backed stacks credential-free. Public-OSS posture requires explicit conventions so external readers (and forkers) understand the contract.
+
+### §2.1 Stack directory naming
+
+- **Path:** `stacks/<name>/` — one directory per Portainer Git-backed stack.
+- **`<name>`:** kebab-case; MUST match the **Portainer stack name** registered in the Portainer UI (case-sensitive). Mismatch breaks Git-sync.
+- **Files per stack:** `docker-compose.yml` (canonical), `README.md` (purpose + ops notes), `.env.example` (non-secret defaults only).
+- **Currently live:** `stacks/immich/` (Portainer stack id 17 on `vagary-core-1`).
+
+### §2.2 Compose env-var conventions
+
+- **Naming:** `<STACK_UPPER>_<NOUN>` where `<STACK_UPPER>` is the SCREAMING_SNAKE_CASE form of the stack name (e.g. `IMMICH_DB_PASSWORD`, `IMMICH_UPLOAD_PATH`).
+- **Rationale:** prefix prevents collisions when Portainer surfaces multiple stacks' env-vars in the same UI; matches the `<role>_<noun>` Ansible pattern used in `vps-ansible/roles/`.
+- **Rendering:** real secret values are rendered into Portainer at deploy time via Infisical per the platform's secrets authority (§50.3 Infisical canonical). `.env.example` carries the **var names + placeholder defaults only** — never real values.
+- **Public-OSS hard rule:** No plaintext secret, token, DB URL, or API key may land in any file in this repo. Pre-push grep gate (see `scripts/`) enforces.
+
+### §2.3 README per stack
+
+Each `stacks/<name>/README.md` documents:
+- One-line purpose
+- Live target host (`vagary-core-1` or `vagary-compute-1`)
+- Cross-link to relevant ADR or runbook in `platform-docs/`
+- Backup posture (restic? snapshot? N/A?) per the canonical backup matrix
 
 ## References
 - `~/.claude/conventions/universal-claudemd.md` — universal laws, MCP routing
