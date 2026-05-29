@@ -25,12 +25,24 @@ services:
       - ${LOCAL_STORAGE}/profile:/usr/src/app/upload/profile
       - ${LOCAL_STORAGE}/backups:/usr/src/app/upload/backups
       - /etc/localtime:/etc/localtime:ro
+      # OW-202 2026-05-30: bind-mount the Infisical-rendered Immich config-file (RO)
+      # so notifications.smtp.transport.password lives in env-source, NOT in the
+      # system_metadata DB row. The host file is rendered by infisical-agent from
+      # `vps-ansible roles/substrate/files/infisical-tpl/main_host/immich-config.tpl`;
+      # the agent re-renders + `docker restart immich_server` on rotation (polling
+      # 300s). Vendor pattern per https://docs.immich.app/install/config-file/ —
+      # fields in the config-file appear as read-only in Admin → Settings UI.
+      # Migration design: platform-docs/docs/audits/immich-smtp-env-source-migration-2026-05-30.md
+      - /etc/immich/config.json:/etc/immich/config.json:ro
     env_file:
       - /root/.infisical-rendered/immich.env
     environment:
       - TZ=Asia/Kolkata
       - IMMICH_LOG_FORMAT=json
       - IMMICH_TELEMETRY_INCLUDE=all
+      # OW-202: tell Immich to load the config-file from the bind-mounted path.
+      # Per Immich docs, this env names the path INSIDE the container.
+      - IMMICH_CONFIG_FILE=/etc/immich/config.json
     ports:
       # Bound to loopback — Immich is reached only via the Caddy `gallery` vhost
       # on core-1. A 0.0.0.0 publish exposed Immich directly, bypassing Caddy +
