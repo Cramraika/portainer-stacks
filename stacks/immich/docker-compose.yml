@@ -64,6 +64,8 @@ services:
 
   redis:
     container_name: immich_redis
+    # redis-valkey-campaign 2026-05-29: requirepass (REDIS_PASSWORD from Infisical immich proj → immich.env render + stack .env interpolation) + queue tuning (noeviction, job-queue) + Valkey-8 io-threads. Applied live 2026-05-29; this is the git-source for next Portainer redeploy of stack 18.
+    command: valkey-server --requirepass ${REDIS_PASSWORD} --maxmemory 192mb --maxmemory-policy noeviction --maxmemory-samples 10 --tcp-keepalive 60 --io-threads 2 --save "900 1 300 10"
     image: docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177
     environment:
       - TZ=Asia/Kolkata
