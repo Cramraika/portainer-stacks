@@ -25,12 +25,24 @@ services:
       - ${LOCAL_STORAGE}/profile:/usr/src/app/upload/profile
       - ${LOCAL_STORAGE}/backups:/usr/src/app/upload/backups
       - /etc/localtime:/etc/localtime:ro
+      # OW-202 2026-05-30: bind-mount the Infisical-rendered Immich config-file (RO)
+      # so notifications.smtp.transport.password lives in env-source, NOT in the
+      # system_metadata DB row. The host file is rendered by infisical-agent from
+      # `vps-ansible roles/substrate/files/infisical-tpl/main_host/immich-config.tpl`;
+      # the agent re-renders + `docker restart immich_server` on rotation (polling
+      # 300s). Vendor pattern per https://docs.immich.app/install/config-file/ —
+      # fields in the config-file appear as read-only in Admin → Settings UI.
+      # Migration design: platform-docs/docs/audits/immich-smtp-env-source-migration-2026-05-30.md
+      - /etc/immich/config.json:/etc/immich/config.json:ro
     env_file:
       - /root/.infisical-rendered/immich.env
     environment:
       - TZ=Asia/Kolkata
       - IMMICH_LOG_FORMAT=json
       - IMMICH_TELEMETRY_INCLUDE=all
+      # OW-202: tell Immich to load the config-file from the bind-mounted path.
+      # Per Immich docs, this env names the path INSIDE the container.
+      - IMMICH_CONFIG_FILE=/etc/immich/config.json
     ports:
       # Bound to loopback — Immich is reached only via the Caddy `gallery` vhost
       # on core-1. A 0.0.0.0 publish exposed Immich directly, bypassing Caddy +
@@ -64,11 +76,13 @@ services:
 
   redis:
     container_name: immich_redis
+    # redis-valkey-campaign 2026-05-29: requirepass (REDIS_PASSWORD from Infisical immich proj → immich.env render + stack .env interpolation) + queue tuning (noeviction, job-queue) + Valkey-8 io-threads. Applied live 2026-05-29; this is the git-source for next Portainer redeploy of stack 18.
+    command: valkey-server --requirepass ${REDIS_PASSWORD} --maxmemory 192mb --maxmemory-policy noeviction --maxmemory-samples 10 --tcp-keepalive 60 --io-threads 2 --save "900 1 300 10"
     image: docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177
     environment:
       - TZ=Asia/Kolkata
     healthcheck:
-      test: redis-cli ping || exit 1
+      test: valkey-cli -a "$${REDIS_PASSWORD}" --no-auth-warning ping || exit 1
     restart: always
     mem_limit: 256m
 
