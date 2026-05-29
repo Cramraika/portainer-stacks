@@ -70,7 +70,7 @@ services:
     environment:
       - TZ=Asia/Kolkata
     healthcheck:
-      test: redis-cli ping || exit 1
+      test: valkey-cli -a "$${REDIS_PASSWORD}" --no-auth-warning ping || exit 1
     restart: always
     mem_limit: 256m
 
