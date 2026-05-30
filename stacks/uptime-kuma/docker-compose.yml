@@ -1,0 +1,60 @@
+#
+# Uptime-Kuma Stack for Portainer  (Git-backed stack — this repo IS the live source)
+#
+# Codifies the production deploy on vagary-core-1. The container was previously
+# spun up via raw `docker run` (no compose) and got recreated as bridge-only
+# during a Portainer-driven restart, which severed monitoring + portainer-net
+# attachments. Symptom: host_page `/api/status` returned 502 because the in-pane
+# probe (running inside host_page on the `monitoring` network) could not reach
+# uptime-kuma at `100.64.0.1:3001` (host-tailnet) or on the monitoring bridge.
+#
+# Fix (this stack): declare ALL THREE networks the running container had
+# attached pre-incident — `bridge` (default), `monitoring` (cross-stack
+# observability), `portainer-net` (Portainer agent comms). Container reboots
+# now restore the full network surface automatically.
+#
+# §53.5 recurrence-watchlist: R-NETATTACH-DRIFT-AFTER-RECREATE. This stack is
+# the path-(b) closure (architectural codification).
+#
+name: uptime-kuma
+
+services:
+  uptime-kuma:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:2.2.1-rootless
+    restart: always
+    environment:
+      # Embedded MariaDB — uptime-kuma 2.x is migrating from sqlite to mariadb.
+      # Match the live container's runtime env exactly.
+      - UPTIME_KUMA_ENABLE_EMBEDDED_MARIADB=1
+      - UPTIME_KUMA_IS_CONTAINER=1
+    volumes:
+      # Persistent data dir. /opt/uptime-kuma is the on-disk SSOT and must NOT
+      # be replaced — it holds the monitor DB (~60 monitors) + history.
+      - /opt/uptime-kuma:/app/data
+    ports:
+      # Bound to loopback + tailnet only (NOT 0.0.0.0). Public reach is via the
+      # Caddy `status` vhost on core-1; Cloudflare proxies upstream.
+      - '127.0.0.1:3001:3001'
+      - '100.64.0.1:3001:3001'
+    networks:
+      - bridge-default
+      - monitoring
+      - portainer-net
+
+networks:
+  # The plain `bridge` network is Docker's built-in; reference it via external
+  # so Portainer / compose doesn't try to create / replace it.
+  bridge-default:
+    external: true
+    name: bridge
+  # Cross-stack observability network — used by Prometheus + Loki + cAdvisor
+  # to scrape exporters and by host_page to probe in-stack health endpoints.
+  monitoring:
+    external: true
+    name: monitoring
+  # Portainer agent comms network — required for Portainer's container-inspect /
+  # log-stream / exec endpoints to reach this container.
+  portainer-net:
+    external: true
+    name: portainer-net
