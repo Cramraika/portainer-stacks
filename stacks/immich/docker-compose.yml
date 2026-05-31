@@ -76,8 +76,21 @@ services:
 
   redis:
     container_name: immich_redis
-    # redis-valkey-campaign 2026-05-29: requirepass (REDIS_PASSWORD from Infisical immich proj → immich.env render + stack .env interpolation) + queue tuning (noeviction, job-queue) + Valkey-8 io-threads. Applied live 2026-05-29; this is the git-source for next Portainer redeploy of stack 18.
-    command: valkey-server --requirepass ${REDIS_PASSWORD} --maxmemory 192mb --maxmemory-policy noeviction --maxmemory-samples 10 --tcp-keepalive 60 --io-threads 2 --save "900 1 300 10"
+    # redis-valkey-campaign 2026-05-29: requirepass (REDIS_PASSWORD from Infisical immich proj → immich.env render) + queue tuning (noeviction, job-queue) + Valkey-8 io-threads.
+    # OW-234 2026-05-31: previous form used compose-interpolation `${REDIS_PASSWORD}` in
+    # `command:`, but the redis service had no `env_file:` directive — docker-compose
+    # interpolates from stack.env (Portainer working_dir), which never carried
+    # REDIS_PASSWORD. Result: `--requirepass` got no value, valkey treated `--maxmemory`
+    # as the password and `192mb` as the next arg, producing the malformed config
+    #   requirepass "--maxmemory" "192mb"
+    # → 646 restarts in <11h. Fix: (1) add env_file pointing at the Infisical render so
+    # REDIS_PASSWORD is available IN the container, and (2) switch the `command:` to
+    # shell-form via `sh -c` so `$$REDIS_PASSWORD` (compose-escaped) is resolved by the
+    # shell at runtime against env_file vars (compose-interpolation no longer involved).
+    # Healthcheck already correctly uses `$${REDIS_PASSWORD}` (runtime-resolved).
+    env_file:
+      - /root/.infisical-rendered/immich.env
+    command: ["sh", "-c", "exec valkey-server --requirepass \"$$REDIS_PASSWORD\" --maxmemory 192mb --maxmemory-policy noeviction --maxmemory-samples 10 --tcp-keepalive 60 --io-threads 2 --save \"900 1 300 10\""]
     image: docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177
     environment:
       - TZ=Asia/Kolkata
