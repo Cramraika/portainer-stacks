@@ -284,7 +284,7 @@ Concrete progress markers (sequence-anchored, not date-anchored per `feedback_no
 - `platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md` — the *why* of Git-sync as canonical
 - `platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md` — the *what-goes-where* between vps-ansible / Coolify / Portainer
 - `platform-docs/docs/runbooks/portainer-git-sync.md` — operator-supervised migration procedure (per-stack steps + rollback)
-- `platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md` § Portainer — service inventory that names the expected stacks (archived; methodology preserved as historical reference)
+- `platform-docs/02-governance/service-playbooks/substrate/portainer.md` § Stack inventory — canonical list of expected/live Portainer stacks (today: only `immich`, Git-backed from this repo). Supersedes the former `09-trackers/.archived/discovery-D1-services-*` tracker, removed in the 2026-05-17 governance consolidation (commit `d328bb4`).
 - `vps-ansible/roles/observability/` — the Prometheus scrape config that will consume per-stack `/metrics` endpoints once stacks ship
 
 ## VPS Service Navigation
