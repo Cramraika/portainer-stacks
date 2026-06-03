@@ -5,194 +5,21 @@ Git-sync source-of-truth for Portainer stacks (per ADR-022 reconciliation-bounda
 ---
 
 ## Claude Preamble
-<!-- VERSION: 2026-06-03-v49 -->
+<!-- VERSION: 2026-06-03-v50 -->
 <!-- SYNC-SOURCE: ~/.claude/conventions/universal-claudemd.md -->
 
-**Universal laws** (§4), **MCP routing** (§6), **Drift protocol** (§11), **Dynamic maintenance** (§14), **Capability resolution** (§15), **Subagent SKILL POLICY** (§16), **Session continuity** (§17), **Decision queue** (§17.a), **Attestation** (§18), **Cite format** (§19), **Three-way disagreement** (§20), **Pre-conditions** (§21), **Provenance markers** (§22), **Redaction rules** (§23), **Token budget** (§24), **Tool-failure fallback** (§25), **Prompt-injection rule** (§26), **Append-only discipline** (§27), **Closure-claim live-probe** (§27.5 — new in v47), **Design-doc self-consistency closing-pass** (§27.6 — new in v47), **Post-closure substrate-shift re-probe** (§27.7 — new in v47.3), **Workspace-resource canonical-declaration** (§27.8 — new in v48), **BLOCKED_BY markers** (§28), **Stop-loss ladder** (§29), **Business-invariant checks** (§30), **Plugin rent rubric** (§31), **Context ceilings** (§32), **Doc reference graph** (§33), **Anti-hallucination** (§34), **Past+Present+Future body** (§35), **Project trackers** (§36), **Doc ownership** (§37), **Archive-on-delete** (§38), **Sponsor + white-label** (§39 — moved to `playbooks/commercial-bound.md`), **Doc-vs-code drift** (§40), **Brand architecture** (§41), **Design system integration** (§42 — moved to `playbooks/tier-a-design.md`), **Session cognition** (§43), **Plugin dispatch** (§44), **Cross-repo clusters** (§45), **Tool-cascade workflow** (§46), **Multi-role agent matrix** (§47), **Parsimony / smallest-tool-first** (§48), **Audit triage discipline** (§49), **Source-of-truth matrix** (§50 — universal rows only; cluster-specific rows moved to playbooks), **Composite cascade catalog** (§51 — §51.2/51.4/51.6 moved to playbooks), **Session launch context + unattended-mode contract** (§52), **Recurrence detection + root-cause escalation** (§53). Sub-sections new in v44: **§4.5 cascade-commit exception**, **§17.b stale-P0 escalation**, **§32.5 canonical-doc size ceiling**, **§38.5 HANDOFF lifecycle enforcement**. Sub-sections new in v47: **§27.5 closure-claim live-probe discipline** (R8 root-cause fix; landed 2026-05-18) + **§27.6 design-doc self-consistency closing-pass discipline** (R3 root-cause fix; landed 2026-05-18 v47.1). Sub-section new in v47.2: **§53.5 count-instrument pre-population on recurrence detection** (lychee fleet-wide agent closure proposal; landed 2026-05-19). Sub-section new in v47.3: **§27.7 post-closure substrate-shift re-probe discipline** (R8 N=4 path-(b); landed 2026-05-19). Sub-section new in v48: **§27.8 workspace-resource canonical-declaration discipline** (R-SCRD path-(a) procedural fix; broader scope per operator decision 2026-05-19; landed 2026-05-19T22:50Z). **New §§ in v49** (2026-06-03, from the VPS full-leverage campaign): **§54 IaC↔live reconciliation discipline** (54.1 management-state classification · 54.2 converge-secrets-safety · 54.3 `--check`-proves-applies · 54.4 stale-gate re-probe · 54.5 cross-host scrape/converge locus · 54.6 git-state reconcile-not-clobber) + **§55 fullstack-detailed coverage-dimension taxonomy** (canonical 22-dim A1–E3 set + semantic-uniformity contract; depth at platform-docs `02-governance/fullstack-coverage-dimensions.md`).
+**Universal laws (§1–§55) load via user-level `~/.claude/conventions/` and are ALWAYS in context** — `universal-claudemd.summary.md` (≤43-line salient view, read FIRST) → `universal-claudemd.md` (full) + `project-hygiene.md`. Do **NOT** assume their content from memory; consult + verify before asserting (§34 / §43.6 / §43.7). The `## Active Cluster Playbooks` block below names this repo's situational playbooks **read-on-demand** (§49.10): Read the named playbook when its trigger fires — never guess its contents; always-load guardrails are inline. Sync: `~/.claude/scripts/sync-preambles.py` (manual cadence; run after any source edit).
 
-**Cluster playbooks** (per-repo `@-import` based on cluster membership): `~/.claude/conventions/playbooks/vps-infra.md` (DNS XOR for VPS-infra repos), `~/.claude/conventions/playbooks/deployed-service.md` (Sentry/Glitchtip XOR + production-incident triage + time-window correlation for repos with prod telemetry), `~/.claude/conventions/playbooks/tier-a-design.md` (Figma/Stitch + design system for Tier A/B), `~/.claude/conventions/playbooks/multi-lang.md` (cross-language refactor cascade for multi-language repos), `~/.claude/conventions/playbooks/commercial-bound.md` (sponsor-readiness + license-aware code-graph routing), `~/.claude/conventions/playbooks/brand-registry.md` (Vagary brand architecture for Vagary-family repos), `~/.claude/conventions/playbooks/bellring-cluster.md` (Bellring server↔extension; v1-stub), `~/.claude/conventions/playbooks/pulseboard-cluster.md` (Pulseboard Android↔Windows; v1-stub), `~/.claude/conventions/playbooks/vagary-cluster.md` (Vagary product cross-repo; v1-stub). **`tech-debt-audit.md`** is Read-on-demand (NOT @-imported) per ENTRY #169 §49 audit-triage discipline — invoked when user requests audit / tech-debt / dead-code work.
+## Active Cluster Playbooks (read-on-demand — §49.10; bodies at ~/.claude/conventions/playbooks/)
+<!-- BEGIN PLAYBOOKS BLOCK (managed by sync-preambles.py — read-on-demand pointers per §49.10; bodies at ~/.claude/conventions/playbooks/) -->
 
-**Sources**: **`~/.claude/conventions/universal-claudemd.summary.md`** (≤43-line salient view — read FIRST; load the full canonical only where the summary points) → `~/.claude/conventions/universal-claudemd.md` (full laws, MCP routing, lifecycle, rent rubric, doc-graph, anti-hallucination, brand architecture) + `~/.claude/conventions/project-hygiene.md` (doc placement, cleanup, archive-on-delete, ownership matrix) + cluster playbooks under `~/.claude/conventions/playbooks/` (loaded per-repo via `@-import` in `## Active Cluster Playbooks` section; see list above). Read relevant sections before significant work. Sync: `~/.claude/scripts/sync-preambles.py` (manual cadence; run after any source edit).
+These cluster playbooks apply to this repo. You do NOT know their contents from memory —
+**Read the named file when its trigger fires; never assume** (§49.10, §34, §43.6). Bodies are
+NOT inlined and NOT @-imported; the always-load GUARDRAILs below are the only parts that must
+hold without a Read.
 
-## Active Cluster Playbooks (per v40 cluster-split — content auto-inlined)
-<!-- BEGIN PLAYBOOKS BLOCK (managed by sync-preambles.py — content inlined; source at ~/.claude/conventions/playbooks/) -->
-
-Source @-imports (declarative pointer; content inlined below since Claude Code does not recursively expand `@-imports` in per-repo CLAUDE.md):
-- `@~/.claude/conventions/playbooks/vps-infra.md`
-- `@~/.claude/conventions/playbooks/brand-registry.md`
-
-### Playbook: vps-infra.md (verbatim from `~/.claude/conventions/playbooks/vps-infra.md`)
-
-# VPS-Infra Playbook
-
-**VERSION: 2026-05-06-v1**
-Loaded only in VPS-infra cluster repos (per `~/.claude/conventions/repo-inventory.md` §45 cluster: `vps_host`, `vps-ansible`, `platform-docs`, `host_page`, `portainer-stacks`). Per-repo `CLAUDE.md` `@-imports` this file when applicable.
-
-Source: extracted verbatim from `~/.claude/conventions/universal-claudemd.md` v39 §50.1 (DNS XOR rows only) during v40 cluster-split refactor. No content changes — only relocation so non-VPS-infra repos (e.g. `aakhara`, `bellring-server`) don't see DNS-authority rules they could mis-apply.
-
-**Applies to repos**: `vps_host`, `vps-ansible`, `platform-docs`, `host_page`, `portainer-stacks`.
-
----
-
-## DNS authority XOR (originally part of §50.1 authority table)
-
-| Domain | Source of truth | Secondary (read/derivative only) | Anti-pattern |
-|---|---|---|---|
-| **DNS for product domains** (vagaryvoice.cloud, anjaan.online, aakhara.com, bellring.io, pulseboard.build) | **Cloudflare** Zone DNS | — | Hostinger DNS holding the same zone |
-| **DNS for VPS-host management** | **Hostinger** (where the VPS is hosted) | — | Cloudflare Zone for non-product host records |
-
-### Rule
-
-Product domains live in Cloudflare; VPS-host management records (where the VPS itself sits) live in Hostinger. NEVER hold the same zone in both providers — that's the "dual authority" anti-pattern.
-
-When uncertain which side a record belongs on:
-- Is the record about reaching a deployed product (web app, API, CDN)? → Cloudflare
-- Is the record about reaching the VPS itself for ops (SSH, panel access, mail server hostnames for the VPS)? → Hostinger
-
----
-
-## §54-VPS — IaC↔live reconciliation (VPS instantiation of universal §54)
-
-Concrete instantiation of universal §54 for this cluster. (Universal rule + worked cases: `universal-claudemd.md` §54.)
-
-- **Control node (§54.5):** core-1 (`main_host`) is the ansible control node — `ansible_connection: local`. Converges that target `main_host` run **ON core-1**, never mac-driven. compute-1 (`vagaryvoice`) converges run over SSH from the control node. The `/opt/vps-ansible` checkout on core-1 is the converge tree — it can carry uncommitted live-applied work (e.g. a DNS-drift fix); reconcile it before pulling new IaC.
-- **Secrets wrapper (§54.2):** `/usr/local/bin/with-secrets.sh` (provisioned by `vps_host/scripts/secrets/`; on core-1, **absent on the mac workstation**). Canonical converge form `PROJECT=ansible /usr/local/bin/with-secrets.sh ansible-playbook -i inventory/production/hosts.yml <pb> --limit <host>`. It renders `group_vars/all/secrets.yml` from Infisical at runtime (ADR-012 — Infisical canonical, NOT ansible-vault). Any role referencing `vault_*` (e.g. `vault_alloy_loki_pass`) or rendering `/etc/infisical/.env` MUST converge via with-secrets / on the control node — never mac-bare (it renders empty or hard-fails).
-- **Operator-curated live files (§54.1):** compute-1 + core-1 `/opt/prometheus/config/prometheus.yml` are operator-curated (`force: false` in `roles/observability/tasks/prometheus.yml` — render-only-if-absent). A converge does NOT overwrite them; capture live→IaC by editing the role's DR-fallback `content` block + a dated `roles/observability/files/<host>/prometheus-*-live-snapshot-*.yml`.
-- **Cron-writeback registries (§54.6):** `vps_host` (local-only, ADR-038) pushes to two SSH remotes that ALSO receive automated cron writebacks — `mirror` = `core-1:/opt/site-discoverability-registry.git` (cron `site-disco-cron`), `adsense-mirror` = `core-1:/opt/adsense-registry.git` (cron `adsense-cron`). They diverge from local via disjoint registry-yaml writebacks; reconcile by **octopus-merge** (no loss), then push main + tags to both — never force-push.
-- **Scrape locus (§54.5):** core-1 runs its OWN Prometheus (`:9091` → VictoriaMetrics, ADR-084) + compute-1 Prometheus (`:19090`, host-net). On-core-1 exporters are scraped by core-1 Prom via intra-Docker DNS → VM; compute-1 host-net Prom scrapes its own `127.0.0.1:<port>` loopbacks. Cross-host scrape (compute-1 Prom → core-1 exporter) binds the metrics port to the tailnet IP `100.64.0.1` (mysqld/redis_exporter_mt precedent) — never `0.0.0.0`.
-
-### Playbook: brand-registry.md (verbatim from `~/.claude/conventions/playbooks/brand-registry.md`)
-
-# Brand Registry Playbook
-
-**VERSION: 2026-05-07-v1**
-Loaded only in Vagary-family repos (per `~/.claude/conventions/repo-inventory.md` §45). Per-repo `CLAUDE.md` `@-imports` this file when applicable.
-
-Source: extracted verbatim from `~/.claude/conventions/universal-claudemd.md` §41 (Brand architecture) during 2026-05-07 cluster-split refinement (ENTRY #168). No content changes — only relocation so non-Vagary repos (e.g. `metabase-cn`, `tldv_downloader`, `torn-smart-scripts`) don't load 64 lines of Vagary brand registry they have no use for.
-
-**Applies to repos**: `vagary-platform`, `vagary-voice`, `anjaan-app`, `aakhara`, `bellring-server`, `bellring-extension`, `bulk`, `pulseboard`, `pulseboard-desktop`, `project-template`, `portfolio` (cross-link only), `host_page`, `vps_host`, `vps-ansible`, `platform-docs`, `vagary-earnings`.
-
----
-
-## 41. Brand architecture (originally §41 of universal-claudemd.md)
-
-Vagary Life Pvt Ltd is the **corporate parent**. Below it, product and tech activity is organized into named divisions. As of 2026-04-19, one division is formalized: **Vagary Labs** (tech/R&D/platform).
-
-### Structure
-
-```
-Vagary Life Pvt Ltd (parent company; registered entity)
-└── Vagary Labs (tech/R&D/platform division — vagarylabs.com [PENDING])
-    ├── Platform
-    │   └── vagary-platform (20-vertical substrate; repo renamed from `index-of-news` 2026-04-19)
-    │       └── Index of News (flagship vertical; keeps its own news sub-brand + 6 domains)
-    ├── Product brands (each lives as an independent product under its own domain)
-    │   ├── Vagary Voice (vagaryvoice.cloud) — commercial voice-AI SaaS
-    │   ├── Anjaan (anjaan.online) — Hinglish consumer chat
-    │   ├── Bellring (.io/.app/.ai TBD) — whitelabel sale-celebration SaaS; repos `bellring-server` + `bellring-extension` (renamed from `sales-notification-*` 2026-04-19; formerly codenamed Salvo)
-    │   ├── Aakhara (aakhara.com pending) — voice sales-training roleplay for BDEs (Sanskrit "आखाड़ा" = practice arena; repo renamed from `training-bot` 2026-04-19). Positioning TBD: could sit as Vagary Voice sub-product or stand alone
-    │   └── Hype / Mockline / Kohort (legacy proposed names, superseded by Bellring/Aakhara above)
-    └── OSS Utilities
-        ├── bulk (renamed from `bulk_api_trigger` 2026-04-19)
-        ├── tldv_downloader
-        ├── pulseboard (renamed from `NetworkMonitorCN` 2026-04-19; Android OSS, `pulseboard.build` pending)
-        └── project-template
-```
-
-Additional divisions (media, ops, consulting, etc.) may be added later. Keep Vagary Labs scoped to **tech/platform/R&D**.
-
-### Domain strategy
-
-- **vagarylife.com / vagarylife.in** — corporate parent marketing + investor/careers. TO BE BUILT.
-- **vagarylabs.com** — tech/R&D division site. Domain **PENDING PURCHASE** (user flagged). Will host platform docs + OSS index + R&D blog once acquired.
-- **Per-product domains** — each commercial product keeps its own brand domain (`vagaryvoice.cloud`, `anjaan.online`, future `hype.sh`, etc.). Product domains do NOT nest under `vagarylabs.com`.
-- **chinmayramraika.in** — founder's personal hub; cross-links each Vagary Life / Vagary Labs product in a "projects" section.
-
-### Repo-to-brand mapping (authoritative)
-
-| Repo | Vagary Labs home | Product / sub-brand |
-|---|---|---|
-| `vagary-platform` | Platform | Holds all 20 verticals; flagship vertical = **Index of News** (news sub-brand, 6 domains) |
-| `vagary-voice` | Product brands | **Vagary Voice** (commercial product, `vagaryvoice.cloud`) |
-| `anjaan-app` | Product brands | **Anjaan** (consumer product, `anjaan.online`) |
-| `aakhara` | Product brands | **Aakhara** (voice sales-training roleplay; `aakhara.com` pending). Renamed from `training-bot` 2026-04-19. Positioning TBD (standalone OR Vagary Voice sub-product) |
-| `bellring-server` | Product brands | **Bellring** server (whitelabel sale-celebration SaaS backend; `.io/.app/.ai` TBD). Renamed from `sales-notification-backend` 2026-04-19 (formerly codenamed Salvo) |
-| `bellring-extension` | Product brands | **Bellring** extension (Chrome MV3 + Firefox/Edge portable; pairs with `bellring-server`). Renamed from `sales-notification-extension` 2026-04-19 |
-| `bulk`, `tldv_downloader`, `pulseboard`, `project-template` | OSS Utilities | Each with its own GitHub + README brand. `pulseboard` renamed from `NetworkMonitorCN` 2026-04-19 (Android OSS; `pulseboard.build` pending) |
-| `portfolio` | Personal hub (OUTSIDE Vagary Labs) | `chinmayramraika.in` founder site |
-| `host_page`, `platform-docs`, `vps_host`, `n8n-workflows`, `metabase-cn` | Infrastructure (internal to Vagary Labs) | No external product brand |
-| `Automated-sales-manager-main` | Client work (CN-internal) | ASM — CN-branded; Cadre whitelabel TBD |
-| `google-sheet-sales-manager` | Client work (CN-internal) | Sheetpilot whitelabel TBD |
-| `Expense tracker` | Absorbing → Platform (`budget` vertical) | No standalone brand going forward |
-
-### How Claude uses this
-
-- When a repo's description says "product," check the brand table above for positioning.
-- The **platform repo** (`vagary-platform`) is *not* a product. It is substrate. Individual verticals (news, budget, …) are the products that ship.
-- Don't reinvent brand positioning in per-repo CLAUDE.md — reference this section and defer details to `~/.claude/specs/2026-04-19-brand-rename-proposal.md` (for rationale) + `~/.claude/conventions/repo-inventory.md` (for current state).
-- For any new repo: declare its division home in its CLAUDE.md § Status / Brand section and cross-reference here.
-
-### Caveats
-
-- `vagarylabs.com` is **not yet purchased** (2026-04-19). Until acquired, Vagary Labs is an internal organizational concept; do not publish external references to `vagarylabs.com` until DNS is live.
-- Additional divisions (media, ops, consulting) may emerge. When they do, add a sibling subtree here + bump VERSION.
-
----
-
-## Amendment 2 (2026-05-19, R10 deep-audit clarification)
-
-**Trigger**: fleet-benchmark-coc deep-audit surfaced the social-orchestrator registry harmonization (vps_host commit `0332566`) used `index-of-news` as a brand-tracking-unit in 9-row registries. Operator pushback: "vagary-platform will have 20+ verticles each with set of domains... bellring is on back burner... aakhara/anjaan have been merged into vagary platform... attorneyatlas + others are platform verticals not separate brands. based on all the governance and structure whats best recommendation? ensuring dynamics and future."
-
-**Clarification of brand-canon granularity** (corrects the implicit assumption in 9-row registry interpretation):
-
-### Brand-tracking-units (repo/legal-entity level)
-
-The canon below is what gets a SEPARATE PER-PLATFORM SOCIAL-ORCHESTRATOR ENTRY. It is INTENTIONALLY coarse — sub-verticals (e.g. `index-of-news`, `attorneyatlas`, future verticals in vagary-platform) do NOT each get their own social-orchestrator row; they roll up to `vagary-platform`:
-
-| # | Brand-tracking-unit | Repo | Tier | Notes |
-|---|---|---|---|---|
-| 1 | `vagary-platform` | vagary-platform | Platform-tier | 20+ verticals: index-of-news (news), attorneyatlas (legal vertical), future verticals. Per-vertical brand-stories live inside the platform repo, not as separate brand-tracking-units |
-| 2 | `vagary-voice` | vagary-voice | Active commercial | Voice-AI SaaS; trajectory uncertain (operator-flagged) |
-| 3 | `anjaan` | anjaan-app | **Back-burner** (operator-flagged 2026-05-19; "merged into vagary platform i think") | Hinglish consumer chat |
-| 4 | `aakhara` | aakhara | **Back-burner** (operator-flagged 2026-05-19; "merged into vagary platform i think") | Voice sales-training |
-| 5 | `bellring` | bellring-server + bellring-extension | **Back-burner** (operator-flagged 2026-05-19; "not gonna be picked up at least not in a while") | Whitelabel SaaS |
-| 6 | `pulseboard` | pulseboard (Android) + pulseboard-desktop | OSS utility | Android OSS sponsor-ready |
-| 7 | `bulk` | bulk | OSS utility | API trigger CLI |
-| 8 | `tldv-downloader` | tldv_downloader | OSS utility | Public 13★ |
-| 9 | `portfolio` | portfolio | Founder hub | chinmayramraika.in |
-
-### Sub-vertical resolution (within vagary-platform)
-
-vagary-platform IS a 20-vertical substrate. Each vertical (current + future) has its own domains, content surface, and brand-story. They are NOT separate brand-tracking-units for the purpose of social-orchestrator registries.
-
-Known/inferred verticals (non-exhaustive; per operator note "20+ verticles"):
-- `news` — flagship; Index of News brand; 6 news-domains
-- `legal` — attorneyatlas.com + attorneyatlas.us (has dedicated `_tag-manager/attorneyatlas-{com,us}/` workspaces; blackbox probes already in Prom scrape)
-- Future verticals: per operator roadmap (TBD)
-
-When a vertical needs its own social-orchestrator entry, it should be added to vagary-platform's INTERNAL vertical-roster, NOT promoted to top-level brand-tracking-unit.
-
-### Active-vs-back-burner dynamics
-
-The applicability matrix (vps_host `scripts/_applicability-matrix.md`) handles this dynamic via `applicable: true|false` per brand-platform cell. Back-burner brands typically have `applicable: false` on most social platforms today; flipping to `true` as they activate.
-
-When a brand-tracking-unit becomes substantively active (e.g., bellring resumes; aakhara independent again), update the `notes:` for that brand in the matrix; flip `applicable:` per platform as appropriate. The matrix is dynamic; brand-registry.md is canonical (this file).
-
-### Why this matters (closure-claim language)
-
-For audit/closure purposes, when referring to "the 9-brand canon" or similar:
-- This canon is `vagary-platform + vagary-voice + 4 commercial-products + 3 OSS + portfolio = 9 brand-tracking-units`
-- NOT `index-of-news` (that's a vagary-platform vertical, not the brand-tracking-unit)
-- NOT `attorneyatlas` (also a vagary-platform vertical)
-- The 9-row registry per social-platform corresponds to these 9 brand-tracking-units
-
-This amendment was authored to disambiguate after the fleet-benchmark-coc R10 deep-audit surfaced that earlier registry-harmonization used `index-of-news` as a brand-tracking-unit (wrong granularity). The harmonization-on-disk is being preserved (operator decision: not blow it up); a future cleanup PR will rewrite the 9 registry YAMLs to use `vagary-platform` instead of `index-of-news`. Tracker: master-pending OW-132 (filed post-amendment).
-
-### Operator-OOB residuals (per operator pushback 2026-05-19)
-
-- **Whether bellring/aakhara/anjaan/vagary-voice get reactivated**: future-state decision; current applicability matrix reflects today's back-burner state honestly
-- **Whether attorneyatlas (or other vagary-platform verticals) get promoted to top-level brand-tracking-unit**: future-state decision; today's brand-canon does NOT promote them
-- **Whether more verticals are added to vagary-platform**: operator-driven; brand-registry.md updates as needed
+- `vps-infra.md` — when: DNS / VPS-infra / reverse-proxy work. GUARDRAIL: DNS authority is XOR — verify the canonical provider in vps-infra.md before any DNS change.
+- `brand-registry.md` — when: brand / positioning / brand-canon / cross-repo brand work.
 
 <!-- END PLAYBOOKS BLOCK -->
 
