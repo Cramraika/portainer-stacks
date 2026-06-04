@@ -19,6 +19,12 @@ created as Portainer stacks; they are not pending exports. See
 
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
+**Not-in-scope: Traefik (coolify-proxy).** Traefik on `vagary-compute-1` is
+Coolify-substrate (ADR-029 / Principle #12 — never hand-edit `/data/coolify/proxy/*`),
+**not** a Portainer stack. Portainer manages `vagary-core-1` stacks only (e.g. `immich`).
+For Traefik edge config see the platform-docs appendix
+[`05-architecture/part-B-service-appendices/vps-admin/substrate/traefik.md`](https://github.com/Cramraika/platform-docs/blob/main/05-architecture/part-B-service-appendices/vps-admin/substrate/traefik.md).
+
 ## Layout
 
 ```
