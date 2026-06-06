@@ -56,6 +56,11 @@ services:
       - database
     restart: always
     mem_limit: 2g
+    # CPU monopoly-bound (OW-302; firewall-stack §W8 2026-06-06). core-1 is a 2-vCPU host;
+    # the 2026-06-06 disk-full→throttle incident + the cold-reboot herd showed uncapped
+    # containers can pin the box. cpus is a MAX (CFS still shares the 2 cores) — these bounds
+    # let immich burst normally (24h-peak <0.02 core) but never take both cores from the fleet.
+    cpus: 1.0
     healthcheck:
       disable: false
 
@@ -71,6 +76,10 @@ services:
       - IMMICH_LOG_FORMAT=json
     restart: always
     mem_limit: 2560m
+    # CPU monopoly-bound (OW-302) — the HEAVIEST core-1 container (ML inference is bursty:
+    # idle then heavy during photo import/scan). 1.5 of 2 cores allows good ML throughput
+    # yet guarantees ≥0.5 core headroom for the rest of the fleet during a burst/herd.
+    cpus: 1.5
     healthcheck:
       disable: false
 
@@ -98,6 +107,7 @@ services:
       test: valkey-cli -a "$${REDIS_PASSWORD}" --no-auth-warning ping || exit 1
     restart: always
     mem_limit: 256m
+    cpus: 0.5  # CPU monopoly-bound (OW-302) — valkey is light; 0.5 is ample
 
   database:
     container_name: immich_postgres
@@ -114,6 +124,7 @@ services:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql
     restart: always
     mem_limit: 1g
+    cpus: 1.0  # CPU monopoly-bound (OW-302) — postgres+pgvector; 1.0 ample, bounds vector-index bursts
 
 volumes:
   model-cache:
