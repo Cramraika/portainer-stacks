@@ -8,14 +8,17 @@ Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compo
 
 ## Status
 
-**All live Portainer stacks captured (2026-05-17).** The live Portainer host
-(`vagary-core-1`) was enumerated via the API: it has exactly two stacks —
-`immich-app` (**Git-backed from this repo** — Portainer auto-polls
-`stacks/immich/docker-compose.yml` hourly) and `anjaan_online` (git-deployed;
-compose lives in the `anjaan-app` repo, documented at `stacks/anjaan_online/`).
-`cronicle` and `dns-proxy` — named in an early discovery inventory — were never
-created as Portainer stacks; they are not pending exports. See
-[Stack inventory](#stack-inventory).
+**One live Git-backed Portainer stack: `immich`.** The live Portainer host
+(`vagary-core-1`) has one repo-managed stack — `immich-app` (**Git-backed from
+this repo** — Portainer auto-polls `stacks/immich/docker-compose.yml` hourly).
+`anjaan_online` was removed as a Portainer stack — it is Coolify-deployed, not
+Portainer-managed; the former `stacks/anjaan_online/` was dropped. A second
+compose, `stacks/uptime-kuma/`, is **prepared in this repo but not yet migrated**
+to a Git-backed Portainer stack (the container runs raw today; migration pending
+— see its README). `cronicle` and `dns-proxy` — named in an early discovery
+inventory — were never created as Portainer stacks; they are not pending exports.
+Canonical stack inventory: the platform-docs portainer service-playbook
+(cross-referenced below). See [Stack inventory](#stack-inventory).
 
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
@@ -51,7 +54,7 @@ All scripts read configuration from environment variables; no hard-coded credent
 
 ## Migration procedure (operator-supervised)
 
-Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/docs/runbooks/portainer-git-sync.md).
+Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/blob/main/docs/runbooks/portainer-git-sync.md).
 
 **Pre-conditions:**
 - Portainer admin API token (operator-CFR; local-admin auth retained per kickoff coordinator default)
@@ -90,18 +93,19 @@ Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](htt
 
 ## Stack inventory
 
-Populated per-migration. Live Portainer (`vagary-core-1`) was enumerated via the
-API on 2026-05-17 — it currently has exactly **two** stacks:
+Populated per-migration. Current state:
 
 | Stack | Portainer ID | Host | Status |
 |---|---|---|---|
 | immich-app | 8 | `vagary-core-1` | **Git-backed** — `stacks/immich/docker-compose.yml` is the live source; Portainer auto-polls this repo hourly (migrated to Git-sync 2026-05-17, W8) |
-| anjaan_online | 14 | `vagary-core-1` | git-deployed — compose lives in the `anjaan-app` repo, not exportable; documented at `stacks/anjaan_online/` |
+| uptime-kuma | — | `vagary-core-1` | **Prepared, not yet migrated** — compose lives at `stacks/uptime-kuma/`; container currently runs raw (not yet a Git-backed Portainer stack). Migration codifies its 3-network attach — see `stacks/uptime-kuma/README.md` |
+| ~~anjaan_online~~ | — | — | **Removed** — Coolify-deployed (not a Portainer stack); former `stacks/anjaan_online/` dropped |
 
-The earlier discovery inventory (`platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md`)
-named `cronicle` and `dns-proxy` — **neither was ever created as a Portainer
-stack** on the live host (confirmed by API enumeration 2026-05-17). They are
-not pending exports; the inventory item is closed.
+The early discovery inventory (since retired) named `cronicle` and `dns-proxy`
+— **neither was ever created as a Portainer stack** on the live host (confirmed
+by API enumeration 2026-05-17). They are not pending exports; the inventory item
+is closed. Current canonical home for this finding:
+[`platform-docs/02-governance/service-playbooks/substrate/portainer.md`](https://github.com/Cramraika/platform-docs/blob/main/02-governance/service-playbooks/substrate/portainer.md).
 
 ## Forking / reuse
 
@@ -117,9 +121,9 @@ under `scripts/` are generic; to reuse them in your own setup:
 
 ## Cross-references
 
-- [`platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md`](https://github.com/Cramraika/platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md) — *why* Git-sync is canonical
-- [`platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md`](https://github.com/Cramraika/platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md) — *what goes where* between vps-ansible / Coolify / Portainer
-- [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/docs/runbooks/portainer-git-sync.md) — operator-supervised migration runbook
+- [`platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md`](https://github.com/Cramraika/platform-docs/blob/main/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md) — *why* Git-sync is canonical
+- [`platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md`](https://github.com/Cramraika/platform-docs/blob/main/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md) — *what goes where* between vps-ansible / Coolify / Portainer
+- [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/blob/main/docs/runbooks/portainer-git-sync.md) — operator-supervised migration runbook
 - [`vps-ansible/roles/observability/`](https://github.com/Cramraika/vps-ansible/tree/main/roles/observability) — Prometheus scrape config that will consume per-stack `/metrics` endpoints once stacks ship
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — stack-authoring and migration rules
 - [`SECURITY.md`](SECURITY.md) — secret-handling and reporting posture
