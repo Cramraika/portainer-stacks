@@ -8,14 +8,13 @@ Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compo
 
 ## Status
 
-**All live Portainer stacks captured (2026-05-17).** The live Portainer host
-(`vagary-core-1`) was enumerated via the API: it has exactly two stacks —
-`immich-app` (**Git-backed from this repo** — Portainer auto-polls
-`stacks/immich/docker-compose.yml` hourly) and `anjaan_online` (git-deployed;
-compose lives in the `anjaan-app` repo, documented at `stacks/anjaan_online/`).
-`cronicle` and `dns-proxy` — named in an early discovery inventory — were never
-created as Portainer stacks; they are not pending exports. See
-[Stack inventory](#stack-inventory).
+**Two Git-backed stacks are defined here (reconciled 2026-06-07):**
+`stacks/immich/` and `stacks/uptime-kuma/` — Portainer on `vagary-core-1`
+auto-polls both hourly. The formerly-listed `anjaan_online` stack was dropped
+(orphan stack deleted live; its stale `stacks/anjaan_online/` dir removed at
+the public-flip, `7c6dc92`). `cronicle` and `dns-proxy` — named in an early
+discovery inventory — were never created as Portainer stacks; not pending
+exports. See [Stack inventory](#stack-inventory).
 
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
@@ -95,10 +94,14 @@ API on 2026-05-17 — it currently has exactly **two** stacks:
 
 | Stack | Portainer ID | Host | Status |
 |---|---|---|---|
-| immich-app | 8 | `vagary-core-1` | **Git-backed** — `stacks/immich/docker-compose.yml` is the live source; Portainer auto-polls this repo hourly (migrated to Git-sync 2026-05-17, W8) |
-| anjaan_online | 14 | `vagary-core-1` | git-deployed — compose lives in the `anjaan-app` repo, not exportable; documented at `stacks/anjaan_online/` |
+| immich-app | 17 (re-created; was 8 at the W8 migration — ids drift on recreate) | `vagary-core-1` | **Git-backed** — `stacks/immich/docker-compose.yml` is the live source; Portainer auto-polls this repo hourly (migrated to Git-sync 2026-05-17, W8) |
+| uptime-kuma | — (verify via API) | `vagary-core-1` | **Git-backed** — `stacks/uptime-kuma/docker-compose.yml`; added (#3) to codify the 3-network attach |
 
-The earlier discovery inventory (`platform-docs/09-trackers/.archived/discovery-D1-services-20260420.md`)
+(`anjaan_online` row removed 2026-06-07 — stack deleted live + dir dropped at `7c6dc92`.)
+
+The earlier discovery inventory (the retired `09-trackers` D1 tracker — removed in the
+2026-05-17 governance consolidation; superseded by
+`platform-docs/02-governance/service-playbooks/substrate/portainer.md` § Stack inventory)
 named `cronicle` and `dns-proxy` — **neither was ever created as a Portainer
 stack** on the live host (confirmed by API enumeration 2026-05-17). They are
 not pending exports; the inventory item is closed.
