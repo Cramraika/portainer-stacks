@@ -1,0 +1,55 @@
+#
+# Immich machine-learning — RELOCATED to compute-1 (operator override 2026-06-08)
+#
+# Topology: ADR-096 D4 (NO Immich-ML relocation) was OVERRIDDEN by the operator on
+#   2026-06-08 (see ADR-096 Amendment A1). Immich-ML now RUNS, relocated OFF the
+#   2-vCPU core-1 ONTO compute-1 (8 vCPU / 32 GB). The immich_server (core-1) reaches
+#   this ML container over the tailnet at http://100.64.0.2:3003 via
+#   machineLearning.urls in /etc/immich/config.json (rendered from
+#   vps-ansible roles/substrate/files/infisical-tpl/main_host/immich-config.tpl).
+#
+# Deploy host + endpoint: vagary-compute-1. Live as a plain docker-compose project
+#   at /opt/immich-ml/docker-compose.yml on compute-1 (NOT a Portainer-managed stack
+#   — unlike the core-1 immich stack which IS Portainer-managed). If/when this is
+#   onboarded into compute-1's Portainer, point that Portainer endpoint's stack git
+#   source at this repo path. Until then `docker compose -f /opt/immich-ml/docker-compose.yml up -d`.
+#
+# From-scratch prereq: the external `monitoring` docker network must already exist on
+#   compute-1 (it is the shared observability network compute-1's prometheus/cadvisor
+#   scrape over). Create with `docker network create monitoring` if absent before first up.
+#
+# Port bind: 100.64.0.2:3003 is compute-1's tailnet IP — the ML port is reachable
+#   ONLY over the Headscale tailnet (core-1's immich_server → compute-1 ML), never
+#   publicly. Do NOT change to 0.0.0.0.
+#
+# VERSION-PIN RULE: this ML image tag MUST equal the immich-server image tag in
+#   portainer-stacks/stacks/immich/docker-compose.yml on EVERY upgrade. Server and ML
+#   are now in two compose files on two hosts; an upgrade must touch BOTH. A version
+#   skew between server and ML is an unsupported Immich configuration.
+#
+name: immich-ml
+services:
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:v2.7.5
+    volumes:
+      - model-cache:/cache
+    environment:
+      - TZ=Asia/Kolkata
+      - IMMICH_LOG_FORMAT=json
+      - MACHINE_LEARNING_WORKERS=1
+      - MACHINE_LEARNING_MODEL_TTL=300
+    ports:
+      - "100.64.0.2:3003:3003"
+    networks:
+      - default
+      - monitoring
+    restart: always
+    mem_limit: 2560m
+    cpus: 1.5
+volumes:
+  model-cache:
+networks:
+  default:
+  monitoring:
+    external: true

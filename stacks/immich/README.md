@@ -15,9 +15,16 @@ Self-hosted photo and video management — [immich.app](https://immich.app/).
 | Service | Container | Image |
 |---|---|---|
 | immich-server | `immich_server` | `ghcr.io/immich-app/immich-server:v2.7.5` |
-| immich-machine-learning | `immich_machine_learning` | `ghcr.io/immich-app/immich-machine-learning:v2.7.5` |
 | redis | `immich_redis` | `docker.io/valkey/valkey:8-bookworm` (sha-pinned) |
 | database | `immich_postgres` | `ghcr.io/immich-app/postgres:18-vectorchord0.5.3-pgvector0.8.1` |
+
+> **immich-machine-learning relocated to compute-1 (2026-06-08).** The ML
+> container no longer runs in this core-1 stack — it lives in
+> [`../immich-ml/`](../immich-ml/) (compute-1, tailnet `100.64.0.2:3003`) per the
+> operator override of ADR-096 D4 (Amendment A1). `immich_server` reaches it via
+> `machineLearning.urls` in `/etc/immich/config.json`. **Version-pin:** the
+> `immich-ml` image tag must equal `immich-server`'s tag on every upgrade — both
+> stacks change together.
 
 ## Environment variables
 
