@@ -64,24 +64,15 @@ services:
     healthcheck:
       disable: false
 
-  immich-machine-learning:
-    container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:v2.7.5
-    volumes:
-      - model-cache:/cache
-    env_file:
-      - /root/.infisical-rendered/immich.env
-    environment:
-      - TZ=Asia/Kolkata
-      - IMMICH_LOG_FORMAT=json
-    restart: always
-    mem_limit: 2560m
-    # CPU monopoly-bound (OW-302) — the HEAVIEST core-1 container (ML inference is bursty:
-    # idle then heavy during photo import/scan). 1.5 of 2 cores allows good ML throughput
-    # yet guarantees ≥0.5 core headroom for the rest of the fleet during a burst/herd.
-    cpus: 1.5
-    healthcheck:
-      disable: false
+  # immich-machine-learning: RELOCATED to compute-1 (operator override 2026-06-08;
+  # ADR-096 Amendment A1). The ML container no longer runs on core-1 — its compose is
+  # now ../immich-ml/docker-compose.yml, live on compute-1 at /opt/immich-ml/docker-compose.yml,
+  # bound to the tailnet at 100.64.0.2:3003. immich_server reaches it via
+  # machineLearning.urls in /etc/immich/config.json (rendered from
+  # vps-ansible …/main_host/immich-config.tpl) — no compose link from this stack is needed
+  # (the server calls ML over the tailnet). VERSION-PIN: the immich-ml image tag MUST
+  # equal immich-server's tag on every upgrade. (Removed with it: the `model-cache` volume,
+  # which now lives in the immich-ml stack.)
 
   redis:
     container_name: immich_redis
@@ -125,9 +116,6 @@ services:
     restart: always
     mem_limit: 1g
     cpus: 1.0  # CPU monopoly-bound (OW-302) — postgres+pgvector; 1.0 ample, bounds vector-index bursts
-
-volumes:
-  model-cache:
 
 networks:
   default:
