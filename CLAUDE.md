@@ -20,6 +20,7 @@ hold without a Read.
 
 - `vps-infra.md` — when: DNS / VPS-infra / reverse-proxy work. GUARDRAIL: DNS authority is XOR — verify the canonical provider in vps-infra.md before any DNS change.
 - `brand-registry.md` — when: brand / positioning / brand-canon / cross-repo brand work.
+- `commercial-bound.md` — when: license / sponsor-readiness / graph-tool-output / white-label work. GUARDRAIL: this repo is **PUBLIC** — never commit/ship GitNexus (PolyForm-NC) graph output here; CGC is the canonical graph source (§50.2 license-aware routing).
 
 <!-- END PLAYBOOKS BLOCK -->
 
