@@ -5,7 +5,7 @@ Self-hosted photo and video management — [immich.app](https://immich.app/).
 | Field | Value |
 |---|---|
 | **Host** | vagary-core-1 |
-| **Portainer stack ID** | 8 |
+| **Portainer stack ID** | 18 (live BoltDB probe 2026-06-08; was 8 at W8, then 17 — ids drift on recreate) |
 | **Stack mode** | **Git-backed** — Portainer pulls this `docker-compose.yml` from this repo (hourly auto-update poll). This repo IS the live source of truth, not a mirror/export. |
 | **History** | Captured 2026-05-16 (OW-17 — first portainer-stacks migration); migrated to Portainer Git-sync 2026-05-17 (W8) |
 | **Web port** | `2283` (immich-server) |

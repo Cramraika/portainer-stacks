@@ -26,7 +26,6 @@ few operator helper scripts.
 ## Cross-references
 
 - `README.md` — repo role, migration flow, and stack inventory
-- `HANDOFF-R3.md` — current cross-session migration caveats
 - `platform-docs/docs/runbooks/portainer-git-sync.md` — canonical migration
   runbook
 - `platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md`
