@@ -2,12 +2,12 @@
 
 Immich machine-learning (CLIP semantic search + face recognition) — **relocated
 to compute-1** (operator override 2026-06-08; see
-[ADR-096 Amendment A1](../../../platform-docs/04-decision-memory/adrs/ADR-096-fleet-capacity-rebalance-and-reduced-footprint.md)).
+[ADR-096 Amendment A1](https://github.com/Cramraika/platform-docs/blob/main/04-decision-memory/adrs/ADR-096-fleet-capacity-rebalance-and-reduced-footprint.md#amendment-a1--immich-ml-runs-relocated-to-compute-1-operator-override-2026-06-08)).
 
 | Field | Value |
 |---|---|
 | **Host** | vagary-compute-1 (8 vCPU / 32 GB) |
-| **Deploy mechanism** | Plain docker-compose at `/opt/immich-ml/docker-compose.yml` on compute-1 — **NOT** a Portainer-managed stack today (unlike the core-1 `immich` stack, id 8, which is Portainer Git-backed). This file is the Git-backed IaC source; deploy with `docker compose -f /opt/immich-ml/docker-compose.yml up -d`. If onboarded into compute-1's Portainer later, point that endpoint's stack Git source at this dir. |
+| **Deploy mechanism** | Plain docker-compose at `/opt/immich-ml/docker-compose.yml` on compute-1 — **NOT** a Portainer-managed stack today (unlike the core-1 `immich` stack — id 18 per live BoltDB probe 2026-06-08, ids drift on recreate — which is Portainer Git-backed). This file is the Git-backed IaC source; deploy with `docker compose -f /opt/immich-ml/docker-compose.yml up -d`. If onboarded into compute-1's Portainer later, point that endpoint's stack Git source at this dir. |
 | **ML port** | `100.64.0.2:3003` — compute-1's **tailnet** IP; reachable only over the Headscale tailnet (never public). |
 | **Reached by** | `immich_server` on core-1 via `machineLearning.urls=["http://100.64.0.2:3003"]` in `/etc/immich/config.json` (rendered from `vps-ansible …/main_host/immich-config.tpl`). |
 | **History** | Was a service block inside the core-1 `immich` stack until 2026-06-08; split out + relocated to compute-1 per the operator override of ADR-096 D4. |

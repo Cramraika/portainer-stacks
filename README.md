@@ -8,9 +8,12 @@ Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compo
 
 ## Status
 
-**Two Git-backed stacks are defined here (reconciled 2026-06-07):**
+**Two Portainer Git-backed stacks are defined here (reconciled 2026-06-07):**
 `stacks/immich/` and `stacks/uptime-kuma/` — Portainer on `vagary-core-1`
-auto-polls both hourly. The formerly-listed `anjaan_online` stack was dropped
+auto-polls both hourly. A third Git-backed compose definition, `stacks/immich-ml/`,
+is a `vagary-compute-1` **plain-compose** deployment (NOT Portainer-managed;
+relocated off core-1 per ADR-096 Amendment A1, 2026-06-08) — see
+[Stack inventory](#stack-inventory). The formerly-listed `anjaan_online` stack was dropped
 (orphan stack deleted live; its stale `stacks/anjaan_online/` dir removed at
 the public-flip, `7c6dc92`). `cronicle` and `dns-proxy` — named in an early
 discovery inventory — were never created as Portainer stacks; not pending
@@ -94,10 +97,15 @@ API on 2026-05-17 — it currently has exactly **two** stacks:
 
 | Stack | Portainer ID | Host | Status |
 |---|---|---|---|
-| immich-app | 17 (re-created; was 8 at the W8 migration — ids drift on recreate) | `vagary-core-1` | **Git-backed** — `stacks/immich/docker-compose.yml` is the live source; Portainer auto-polls this repo hourly (migrated to Git-sync 2026-05-17, W8) |
+| immich-app | 18 (live BoltDB probe 2026-06-08; was 8 at W8, then 17 — ids drift on recreate, last re-created on the 2026-06-08 ML-split) | `vagary-core-1` | **Git-backed** — `stacks/immich/docker-compose.yml` is the live source; Portainer auto-polls this repo hourly (migrated to Git-sync 2026-05-17, W8) |
 | uptime-kuma | — (verify via API) | `vagary-core-1` | **Git-backed** — `stacks/uptime-kuma/docker-compose.yml`; added (#3) to codify the 3-network attach |
+| immich-ml | n/a — **not a Portainer stack** | `vagary-compute-1` | **Plain-compose** — `stacks/immich-ml/docker-compose.yml` is the Git-backed IaC source for the compute-1 ML deployment at `/opt/immich-ml/`; deployed with `docker compose`, NOT Portainer Git-sync. Relocated off core-1 per ADR-096 Amendment A1 (2026-06-08). |
 
 (`anjaan_online` row removed 2026-06-07 — stack deleted live + dir dropped at `7c6dc92`.)
+
+The two Portainer-managed stacks above (`immich`, `uptime-kuma`) live on `vagary-core-1`.
+`stacks/immich-ml/` is the third directory tracked here but is **not** a Portainer stack — it is a
+`vagary-compute-1` plain-compose deployment (see its row + [`stacks/immich-ml/README.md`](stacks/immich-ml/README.md)).
 
 The earlier discovery inventory (the retired `09-trackers` D1 tracker — removed in the
 2026-05-17 governance consolidation; superseded by
