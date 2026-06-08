@@ -50,7 +50,7 @@ All scripts read configuration from environment variables; no hard-coded credent
 
 ## Migration procedure (operator-supervised)
 
-Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/docs/runbooks/portainer-git-sync.md).
+Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/blob/main/docs/runbooks/portainer-git-sync.md).
 
 **Pre-conditions:**
 - Portainer admin API token (operator-CFR; local-admin auth retained per kickoff coordinator default)
@@ -120,9 +120,9 @@ under `scripts/` are generic; to reuse them in your own setup:
 
 ## Cross-references
 
-- [`platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md`](https://github.com/Cramraika/platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md) — *why* Git-sync is canonical
-- [`platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md`](https://github.com/Cramraika/platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md) — *what goes where* between vps-ansible / Coolify / Portainer
-- [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/docs/runbooks/portainer-git-sync.md) — operator-supervised migration runbook
+- [`platform-docs/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md`](https://github.com/Cramraika/platform-docs/blob/main/04-decision-memory/adrs/ADR-022-reconciliation-boundaries.md) — *why* Git-sync is canonical
+- [`platform-docs/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md`](https://github.com/Cramraika/platform-docs/blob/main/04-decision-memory/adrs/ADR-029-ansible-scope-vs-coolify-boundary.md) — *what goes where* between vps-ansible / Coolify / Portainer
+- [`platform-docs/docs/runbooks/portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/blob/main/docs/runbooks/portainer-git-sync.md) — operator-supervised migration runbook
 - [`vps-ansible/roles/observability/`](https://github.com/Cramraika/vps-ansible/tree/main/roles/observability) — Prometheus scrape config that will consume per-stack `/metrics` endpoints once stacks ship
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — stack-authoring and migration rules
 - [`SECURITY.md`](SECURITY.md) — secret-handling and reporting posture
