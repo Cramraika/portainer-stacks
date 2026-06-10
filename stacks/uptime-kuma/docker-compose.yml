@@ -22,6 +22,11 @@ services:
   uptime-kuma:
     container_name: uptime-kuma
     image: louislam/uptime-kuma:2.2.1-rootless
+    # Resource posture (fleet-capacity campaign 2026-06-10): G1 cap-everything
+    # (platform-docs 02-governance/capacity-posture-standard.md / ADR-098); sized
+    # 7d-peak 259Mi x2; live-applied via docker update same day.
+    cpus: 1.0
+    mem_limit: 576m
     restart: always
     environment:
       # Embedded MariaDB — uptime-kuma 2.x is migrating from sqlite to mariadb.
