@@ -19,6 +19,11 @@ the public-flip, `7c6dc92`). `cronicle` and `dns-proxy` — named in an early
 discovery inventory — were never created as Portainer stacks; not pending
 exports. See [Stack inventory](#stack-inventory).
 
+Non-candidates note (fail2ban campaign 2026-06-11): the fleet's `fail2ban_exporter`
+containers are NOT Portainer stacks either — fail2ban itself is host-native systemd and
+its exporter is a vps-ansible-managed compose (`roles/observability/tasks/fail2ban-exporter.yml`);
+canonical docs at `platform-docs/05-architecture/part-B-service-appendices/vps-admin/substrate/fail2ban.md`.
+
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
 **Not-in-scope: Traefik (coolify-proxy).** Traefik on `vagary-compute-1` is
