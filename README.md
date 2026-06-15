@@ -24,6 +24,12 @@ containers are NOT Portainer stacks either — fail2ban itself is host-native sy
 its exporter is a vps-ansible-managed compose (`roles/observability/tasks/fail2ban-exporter.yml`);
 canonical docs at `platform-docs/05-architecture/part-B-service-appendices/vps-admin/substrate/fail2ban.md`.
 
+Non-candidates note (NocoDB campaign 2026-06-15): **NocoDB ("Archive")** is NOT a
+Portainer stack — it's a **Coolify-managed** service on `vagary-compute-1`
+(`archive.chinmayramraika.in`, CF-Access-gated; operator-personal SQLite store).
+Listed here so it's not mistaken for a missing/pending export. Canonical docs at
+`platform-docs/05-architecture/part-B-service-appendices/vps-admin/specialized/nocodb.md`.
+
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
 **Not-in-scope: Traefik (coolify-proxy).** Traefik on `vagary-compute-1` is
