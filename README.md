@@ -30,6 +30,15 @@ Portainer stack — it's a **Coolify-managed** service on `vagary-compute-1`
 Listed here so it's not mistaken for a missing/pending export. Canonical docs at
 `platform-docs/05-architecture/part-B-service-appendices/vps-admin/specialized/nocodb.md`.
 
+Non-candidates note (n8n campaign 2026-06-18): **n8n** is NOT a Portainer stack —
+it's a **plain docker-compose** stack at `/opt/n8n` on `vagary-compute-1`, rendered
+by **vps-ansible** `roles/n8n/templates/docker-compose.yml.j2` (`# Ansible managed`,
+ADR-058 + ADR-100), deployed via `playbooks/n8n-deploy.yml` — NOT Portainer Git-sync,
+NOT Coolify-runtime (a stale Coolify-DB route-only row was deleted, OW-275 RESOLVED).
+Image pinned in `roles/n8n/defaults/main.yml` (`n8n_image`, live `n8nio/n8n:2.26.6`).
+Listed here so it's not mistaken for a missing/pending export. Canonical docs at
+`platform-docs/05-architecture/part-B-service-appendices/vps-admin/automation/n8n.md`.
+
 The 3 operator-helper scripts under `scripts/` are stable and Portainer-API-validated.
 
 **Not-in-scope: Traefik (coolify-proxy).** Traefik on `vagary-compute-1` is
