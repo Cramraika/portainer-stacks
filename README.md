@@ -166,4 +166,4 @@ under `scripts/` are generic; to reuse them in your own setup:
 
 ## License
 
-See repository LICENSE. Scripts are operational helpers — provided as-is; review before running against your own Portainer instance.
+Proprietary — © 2026 Vagary Labs. All rights reserved. See [LICENSE](LICENSE). Scripts are operational helpers — provided as-is; review before running against your own Portainer instance.
