@@ -1,7 +1,12 @@
-# uptime-kuma — Portainer Git-backed stack
+# uptime-kuma — Portainer stack (authored, NOT yet onboarded)
 
-Codifies the production uptime-kuma deploy on `vagary-core-1`. Companion to the
-existing immich Git-backed stack (this repo IS the single source of truth).
+Codifies the production uptime-kuma deploy on `vagary-core-1`. This compose is
+**authored here but NOT yet onboarded into Portainer** — live `docker inspect`
+(2026-06-21) shows the container has no Portainer stack labels and Portainer's
+BoltDB has no record; it is still a plain `docker run` container. Onboarding is
+**PENDING (Lane-D — operator onboards via Portainer Git-sync)**; see the
+[Migration path](#migration-path-operator) below. Once onboarded it becomes a
+Git-backed stack alongside immich (this repo IS the single source of truth).
 
 ## Why this stack exists
 
