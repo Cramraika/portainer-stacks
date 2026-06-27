@@ -1,6 +1,6 @@
 # portainer-stacks
 
-> **Public OSS** | Tier C infra-config | Vagary Labs / VPS-infra cluster
+> **Public (source-available, proprietary)** | Tier C infra-config | Vagary Labs / VPS-infra cluster
 
 Git-sync source-of-truth for [Portainer](https://www.portainer.io/) Docker Compose stacks. Per ADR-022 reconciliation-boundary, Portainer's BoltDB historically held compose definitions in-band; this repo is the canonical out-of-band declarative source from which Portainer pulls.
 
@@ -145,10 +145,16 @@ not pending exports; the inventory item is closed.
 
 ## Forking / reuse
 
-This is a **public** repo — the compose definitions carry only non-secret VPS
-config (host paths, image tags/digests, network names). All secrets render at
-deploy time via Infisical and never live here. The operator-helper scripts
-under `scripts/` are generic; to reuse them in your own setup:
+This repo is **publicly readable** (so Portainer can clone the Git-backed
+stacks credential-free) but it is **not open-source** — the contents are
+proprietary (© 2026 Vagary Labs; see [LICENSE](LICENSE)). **Reuse, copying,
+redistribution, or derivative works require prior written permission from
+Vagary Labs.** The compose definitions carry only non-secret VPS config (host
+paths, image tags/digests, network names); all secrets render at deploy time
+via Infisical and never live here.
+
+If you obtain written permission to reuse the operator-helper scripts under
+`scripts/` in your own setup:
 
 1. Replace this README's references with your own org / Portainer URL
 2. Replace `REPO_URL` defaults in scripts with your own repo

@@ -32,7 +32,7 @@ Part of the §45 VPS-infra cluster: vps_host, vps-ansible, platform-docs, portai
 
 ## §2 Stack naming + compose env-var conventions
 
-Authored 2026-05-19 (W7 of platform-orchestration campaign). This repo flipped private → public 2026-05-18 (Portainer audit §14.5) so Portainer can clone the Git-backed stacks credential-free. Public-OSS posture requires explicit conventions so external readers (and forkers) understand the contract.
+Authored 2026-05-19 (W7 of platform-orchestration campaign). This repo flipped private → public 2026-05-18 (Portainer audit §14.5) so Portainer can clone the Git-backed stacks credential-free. The public (source-available, proprietary) posture requires explicit conventions so external readers understand the contract.
 
 ### §2.1 Stack directory naming
 
@@ -46,7 +46,7 @@ Authored 2026-05-19 (W7 of platform-orchestration campaign). This repo flipped p
 - **Naming:** `<STACK_UPPER>_<NOUN>` where `<STACK_UPPER>` is the SCREAMING_SNAKE_CASE form of the stack name (e.g. `IMMICH_DB_PASSWORD`, `IMMICH_UPLOAD_PATH`).
 - **Rationale:** prefix prevents collisions when Portainer surfaces multiple stacks' env-vars in the same UI; matches the `<role>_<noun>` Ansible pattern used in `vps-ansible/roles/`.
 - **Rendering:** real secret values are rendered into Portainer at deploy time via Infisical per the platform's secrets authority (§50.3 Infisical canonical). `.env.example` carries the **var names + placeholder defaults only** — never real values.
-- **Public-OSS hard rule:** No plaintext secret, token, DB URL, or API key may land in any file in this repo. Pre-push grep gate (see `scripts/`) enforces.
+- **Public (source-available) hard rule:** No plaintext secret, token, DB URL, or API key may land in any file in this repo. Pre-push grep gate (see `scripts/`) enforces.
 
 ### §2.3 README per stack
 
