@@ -64,7 +64,7 @@ payload = {
     'RepositoryReferenceName': os.environ['REPO_REF'],
     'ComposeFile': os.environ['COMPOSE_PATH'],
     'AutoUpdate': {
-        'Interval': '5m',
+        'Interval': '1h',
         'ForceUpdate': False,
         'Webhook': '',
     },
@@ -87,6 +87,6 @@ STACK_ID=$(echo "${RESPONSE}" | python3 -c "import json,sys;print(json.load(sys.
 echo "imported stack '${STACK_NAME}' (id=${STACK_ID}) configured for Git-sync"
 echo "  repo=${REPO_URL} ref=${REPO_REF}"
 echo "  compose=${COMPOSE_PATH}"
-echo "  auto-update=5m"
+echo "  auto-update=1h"
 echo ""
 echo "verify: ./portainer-verify.sh ${STACK_NAME}"

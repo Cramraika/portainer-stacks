@@ -32,7 +32,7 @@ architectural codification).
 3. **Repository URL**: `https://github.com/Cramraika/portainer-stacks` (public).
 4. **Repository reference**: `refs/heads/main`.
 5. **Compose path**: `stacks/uptime-kuma/docker-compose.yml`.
-6. Enable **GitOps updates** with 5-min polling (matches the immich stack).
+6. Enable **GitOps updates** with hourly (`1h`) polling (matches the immich stack; cadence SoT: `platform-docs/docs/runbooks/portainer-git-sync.md`).
 7. **Pre-flight before deploy**: confirm `/opt/uptime-kuma` on the host is
    non-empty (this is the persistent data dir; the stack mounts it as
    `/app/data` inside the container). Loss of `/opt/uptime-kuma` = loss of

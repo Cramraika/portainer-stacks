@@ -75,7 +75,7 @@ All scripts read configuration from environment variables; no hard-coded credent
 | Script | Purpose | Required env |
 |---|---|---|
 | `scripts/portainer-export.sh <stack-id>` | Dump a stack's compose YAML to stdout. Use `--list` to enumerate stacks first. | `PORTAINER_URL`, `PORTAINER_API_TOKEN` |
-| `scripts/portainer-import.sh <stack-name>` | Re-onboard a stack into Portainer in Git-sync mode (Portainer thereafter pulls from this repo on a 5-minute auto-update interval). | `PORTAINER_URL`, `PORTAINER_API_TOKEN`, `PORTAINER_ENDPOINT_ID`, `REPO_URL`; optional `REPO_REF` (default `refs/heads/main`), `REPO_PAT` (for private repos) |
+| `scripts/portainer-import.sh <stack-name>` | Re-onboard a stack into Portainer in Git-sync mode (Portainer thereafter pulls from this repo on an hourly (`1h`) auto-update interval — cadence SoT: [`portainer-git-sync.md`](https://github.com/Cramraika/platform-docs/blob/main/docs/runbooks/portainer-git-sync.md)). | `PORTAINER_URL`, `PORTAINER_API_TOKEN`, `PORTAINER_ENDPOINT_ID`, `REPO_URL`; optional `REPO_REF` (default `refs/heads/main`), `REPO_PAT` (for private repos) |
 | `scripts/portainer-verify.sh <stack-name>` | Container-health summary for a Compose project (run on the VPS where the stack runs). | none — uses local `docker` |
 
 ## Migration procedure (operator-supervised)
@@ -98,7 +98,7 @@ Authoritative runbook: [`platform-docs/docs/runbooks/portainer-git-sync.md`](htt
    ```bash
    scripts/portainer-import.sh <name>
    ```
-   Or via the Portainer UI: Edit stack → switch to "Git Repository" mode (URL = this repo, Reference = `refs/heads/main`, Compose path = `stacks/<name>/docker-compose.yml`, Auto-update enabled at 5-minute poll).
+   Or via the Portainer UI: Edit stack → switch to "Git Repository" mode (URL = this repo, Reference = `refs/heads/main`, Compose path = `stacks/<name>/docker-compose.yml`, Auto-update enabled at hourly (`1h`) poll).
 5. Verify:
    ```bash
    scripts/portainer-verify.sh <name>
